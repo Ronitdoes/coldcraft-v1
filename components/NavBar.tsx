@@ -24,16 +24,16 @@ export default function NavBar() {
 
   return (
     <nav ref={container} className="bg-[#131313]/90 backdrop-blur-md flex justify-between md:grid md:grid-cols-3 items-center w-full px-4 md:px-8 py-4 md:py-6 max-w-full mx-auto fixed top-0 z-50 border-b border-[#333]">
-      <div className="hidden md:block font-['Space_Grotesk'] uppercase tracking-widest text-xs font-bold text-[#d4d4d4] nav-item">
+      <div className="hidden md:block font-['Space_Grotesk'] uppercase tracking-widest text-xs font-bold text-[#d4d4d4] nav-item opacity-0 -translate-y-5">
         {currentDate}
       </div>
-      <div className="flex justify-center items-center gap-2 md:gap-3 justify-self-center nav-item text-[#ffffff]">
+      <div className="flex justify-center items-center gap-2 md:gap-3 justify-self-center nav-item text-[#ffffff] opacity-0 -translate-y-5">
         <Logo className="w-6 h-6 md:w-8 md:h-8" />
         <span className="text-lg md:text-2xl font-bold tracking-tighter font-headline">
           C O L D C R A F T
         </span>
       </div>
-      <div className="flex justify-end items-center gap-4 md:gap-6 nav-item">
+      <div className="flex justify-end items-center gap-4 md:gap-6 nav-item opacity-0 -translate-y-5">
         <a
           className="hidden sm:block font-['Space_Grotesk'] uppercase tracking-widest text-xs font-bold text-[#d4d4d4] hover:text-[#ffffff] transition-colors"
           href="#"
