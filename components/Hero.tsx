@@ -3,7 +3,12 @@
 import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import EmailFlowAnimation from "@/components/EmailFlowAnimation";
+import dynamic from "next/dynamic";
+
+const EmailFlowAnimation = dynamic(() => import("@/components/EmailFlowAnimation"), {
+  ssr: false,
+  loading: () => null // Prevents layout shifts and keeps it lightweight while loading
+});
 
 export default function Hero() {
   const container = useRef<HTMLElement>(null);
@@ -21,10 +26,7 @@ export default function Hero() {
       opacity: 1,
       rotateX: 0,
       duration: 1.5,
-      stagger: 0.1,
-      onComplete: () => {
-        gsap.set(".hero-char", { clearProps: "all" });
-      }
+      stagger: 0.1
     })
       .fromTo(".hero-line", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.2, ease: "expo.inOut" }, "-=1.0")
       .fromTo(".hero-sub", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 1, stagger: 0.2 }, "-=0.8")
@@ -43,13 +45,13 @@ export default function Hero() {
         <h1 className="font-headline font-black text-huge kerning-tight text-primary select-none pointer-events-none relative mb-0 inline-block w-full">
           <span className="flex justify-center overflow-visible">
             {"MAIL".split("").map((char, i) => (
-              <span key={i} className="hero-char inline-block" style={{ transformStyle: 'preserve-3d' }}>{char}</span>
+              <span key={i} className="hero-char inline-block opacity-0" style={{ transformStyle: 'preserve-3d' }}>{char}</span>
             ))}
           </span>
-          <div className="absolute bottom-[0.06em] left-1/2 -translate-x-1/2 bg-primary/40 h-[1px] w-[80vw] md:w-[40vw] max-w-3xl z-[-1] hero-line transform-origin-left"></div>
+          <div className="absolute bottom-[0.06em] left-1/2 -translate-x-1/2 bg-primary/40 h-[1px] w-[80vw] md:w-[40vw] max-w-3xl z-[-1] hero-line transform-origin-left opacity-0 scale-x-0"></div>
         </h1>
         <div className="flex flex-col items-center w-full">
-          <div className="grid grid-cols-12 w-full text-left mt-12 mb-12 hero-sub">
+          <div className="grid grid-cols-12 w-full text-left mt-12 mb-12 hero-sub opacity-0 translate-y-[30px]">
             <div className="col-span-12 md:col-span-4">
               <p className="font-body text-sm leading-relaxed opacity-60 uppercase tracking-widest">
                 THE GLOBAL CONFERENCE HIGHLIGHTING FRONTEND CLOUD
@@ -59,7 +61,7 @@ export default function Hero() {
             </div>
             <div className="hidden md:block col-span-4"></div>
           </div>
-          <div className="flex flex-col items-center gap-4 md:gap-6 mt-8 md:-mt-24 relative z-20 hero-sub pointer-events-auto">
+          <div className="flex flex-col items-center gap-4 md:gap-6 mt-8 md:-mt-24 relative z-20 hero-sub opacity-0 translate-y-[30px] pointer-events-auto">
             {/* Elegant Hand-drawn Arrow (From Envelope to Button) */}
             <div className="absolute left-1/2 top-1/2 hidden md:block pointer-events-none opacity-80 z-[-1] translate-x-[8rem] lg:translate-x-[9rem] -translate-y-[85%]">
               <span className="hero-arrow-text absolute bottom-[20%] left-[15%] lg:left-[20%] text-white text-xl lg:text-3xl tracking-widest font-bold opacity-0 whitespace-nowrap" style={{ fontFamily: '"Caveat", "Comic Sans MS", cursive', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))' }}>
