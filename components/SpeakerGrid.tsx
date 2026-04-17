@@ -18,7 +18,11 @@ export default function SpeakerGrid() {
       { y: 100, opacity: 0 },
       {
         y: 0, opacity: 1, duration: 1.2, ease: "power4.out",
-        scrollTrigger: { trigger: ".speaker-header", start: "top 85%" }
+        scrollTrigger: { 
+          trigger: ".speaker-header", 
+          start: "top 85%",
+          toggleActions: "play reverse play reverse"
+        }
       }
     );
 
@@ -35,6 +39,7 @@ export default function SpeakerGrid() {
           scrollTrigger: {
             trigger: card,
             start: "top 85%",
+            toggleActions: "play reverse play reverse"
           },
           delay: (i % 3) * 0.15
         }

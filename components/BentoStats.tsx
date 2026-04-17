@@ -20,7 +20,11 @@ export default function BentoStats() {
         { y: 100, opacity: 0 },
         { 
           y: 0, opacity: 1, duration: 1.2, ease: "power4.out",
-          scrollTrigger: { trigger: slide, start: "top 85%" }
+          scrollTrigger: { 
+            trigger: slide, 
+            start: "top 85%",
+            toggleActions: "play reverse play reverse"
+          }
         }
       );
     });
@@ -35,7 +39,11 @@ export default function BentoStats() {
           duration: 2.5,
           snap: { innerHTML: 1 },
           ease: "power3.out",
-          scrollTrigger: { trigger: container.current, start: "top 80%" }
+          scrollTrigger: { 
+            trigger: container.current, 
+            start: "top 80%",
+            toggleActions: "play reverse play reverse"
+          }
         }
       );
     }
