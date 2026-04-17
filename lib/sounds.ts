@@ -2,36 +2,8 @@
 
 let audioCtx: AudioContext | null = null;
 
-// Global state for sound toggle
-let isSoundEnabled = true;
-let subscribers: ((enabled: boolean) => void)[] = [];
-
-if (typeof window !== "undefined") {
-  const stored = localStorage.getItem("coldcraft_sound_enabled");
-  if (stored !== null) {
-    isSoundEnabled = stored === "true";
-  }
-}
-
-export const setSoundEnabled = (enabled: boolean) => {
-  isSoundEnabled = enabled;
-  if (typeof window !== "undefined") {
-    localStorage.setItem("coldcraft_sound_enabled", enabled.toString());
-  }
-  subscribers.forEach((cb) => cb(enabled));
-};
-
-export const getSoundEnabled = () => isSoundEnabled;
-
-export const subscribeToSoundStatus = (cb: (enabled: boolean) => void) => {
-  subscribers.push(cb);
-  return () => {
-    subscribers = subscribers.filter((fn) => fn !== cb);
-  };
-};
-
 const initAudio = () => {
-  if (typeof window === "undefined" || !isSoundEnabled) return null;
+  if (typeof window === "undefined") return null;
   if (!audioCtx) {
     audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
   }
