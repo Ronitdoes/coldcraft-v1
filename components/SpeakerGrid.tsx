@@ -28,23 +28,21 @@ export default function SpeakerGrid() {
 
     // Cards reveal
     const cards = gsap.utils.toArray<HTMLElement>(".speaker-card");
-    cards.forEach((card, i) => {
-      gsap.fromTo(card,
-        { clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)", y: 75 },
-        {
-          clipPath: "polygon(0 0%, 100% 0%, 100% 100%, 0 100%)",
-          y: 0,
-          duration: 1.4,
-          ease: "power4.out",
-          scrollTrigger: {
-            trigger: card,
-            start: "top 85%",
-            toggleActions: "play reverse play reverse"
-          },
-          delay: (i % 3) * 0.15
+    gsap.fromTo(cards,
+      { clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)", y: 75 },
+      {
+        clipPath: "polygon(0 0%, 100% 0%, 100% 100%, 0 100%)",
+        y: 0,
+        duration: 1.4,
+        ease: "power4.out",
+        stagger: 0.15,
+        scrollTrigger: {
+          trigger: ".speaker-grid",
+          start: "top 85%",
+          toggleActions: "play reverse play reverse"
         }
-      );
-    });
+      }
+    );
   }, { scope: container });
 
   return (
@@ -63,7 +61,7 @@ export default function SpeakerGrid() {
             </span>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border-l border-outline-variant">
+        <div className="speaker-grid grid grid-cols-1 md:grid-cols-3 gap-0 border-l border-outline-variant">
           {/* Speaker 1 */}
           <div className="speaker-card aspect-[4/5] md:aspect-square bg-surface-container-low p-6 md:p-8 border-r border-b border-outline-variant group hover:bg-primary transition-colors duration-500 will-change-transform">
             <div className="flex flex-col h-full group-hover:text-on-primary">

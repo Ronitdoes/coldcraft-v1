@@ -19,8 +19,7 @@ export default function Footer() {
         y: 0, opacity: 1, duration: 1.2, ease: "power4.out",
         scrollTrigger: { 
           trigger: container.current, 
-          start: "top 95%",
-          toggleActions: "play reverse play reverse"
+          start: "top 95%"
         }
       }
     );
