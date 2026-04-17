@@ -30,7 +30,7 @@ export default function NavBar() {
       <div className="flex justify-center items-center gap-2 md:gap-3 justify-self-center nav-item text-[#ffffff] opacity-0 -translate-y-5">
         <Logo className="w-6 h-6 md:w-8 md:h-8" />
         <span className="text-lg md:text-2xl font-bold tracking-tighter font-headline">
-          COLDCRAFT
+          C O L D C R A F T
         </span>
       </div>
       <div className="flex justify-end items-center gap-4 md:gap-6 nav-item opacity-0 -translate-y-5">
