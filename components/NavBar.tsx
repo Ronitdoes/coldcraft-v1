@@ -5,10 +5,12 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import Logo from "@/components/Logo";
 import { playHoverSound, playClickSound } from "@/lib/sounds";
+import TextRollover from "@/components/TextRollover";
 
 export default function NavBar() {
   const container = useRef<HTMLElement>(null);
   const [currentDate, setCurrentDate] = useState<string>("MAY 23 2024");
+  const [isBtnHovered, setIsBtnHovered] = useState(false);
 
   useEffect(() => {
     const months = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
@@ -46,14 +48,18 @@ export default function NavBar() {
           onMouseEnter={playHoverSound}
           onMouseDown={playClickSound}
         >
-          LOG IN
+          <TextRollover text="LOG IN" />
         </a>
         <button
-          onMouseEnter={playHoverSound}
+          onMouseEnter={() => {
+            playHoverSound();
+            setIsBtnHovered(true);
+          }}
+          onMouseLeave={() => setIsBtnHovered(false)}
           onMouseDown={playClickSound}
           className="bg-white text-black px-4 py-2 md:px-6 md:py-2 font-headline font-bold uppercase text-[10px] md:text-xs tracking-widest hover:opacity-90 transition-all flex items-center gap-1 md:gap-2 rounded-md hover:scale-105 hover:shadow-lg group"
         >
-          WRITE MY COLD MAIL
+          <TextRollover text="WRITE MY COLD MAIL" trigger={isBtnHovered} />
           <span className="relative overflow-hidden inline-flex items-center justify-center">
             <span className="transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:translate-x-[150%] group-hover:-translate-y-[150%]">
               →

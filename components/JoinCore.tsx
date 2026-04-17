@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { playHoverSound, playClickSound } from "@/lib/sounds";
+import TextRollover from "@/components/TextRollover";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -12,6 +13,7 @@ if (typeof window !== "undefined") {
 
 export default function JoinCore() {
   const container = useRef<HTMLElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
 
   useGSAP(() => {
     gsap.fromTo(".core-bg-text",
@@ -39,7 +41,11 @@ export default function JoinCore() {
         </p>
 
         <button
-          onMouseEnter={playHoverSound}
+          onMouseEnter={() => {
+            playHoverSound();
+            setIsHovered(true);
+          }}
+          onMouseLeave={() => setIsHovered(false)}
           onMouseDown={playClickSound}
           className="bg-white text-black px-8 py-6 md:px-12 md:py-8 transition-all duration-300 hover:bg-gray-200 active:scale-95 group shadow-xl flex flex-col items-center justify-center min-w-[280px] md:min-w-[400px] rounded-xl hover:scale-105 hover:shadow-2xl relative z-10"
         >
@@ -47,7 +53,7 @@ export default function JoinCore() {
             Write my cold mail
           </span>
           <span className="block font-body text-base md:text-lg opacity-70 font-medium flex items-center gap-2">
-            Internship / Full-time
+            <TextRollover text="Internship / Full-time" trigger={isHovered} />
             <span className="relative overflow-hidden inline-flex items-center justify-center">
               <span className="material-symbols-outlined text-xl transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:translate-x-[150%] group-hover:-translate-y-[150%]">
                 arrow_forward
