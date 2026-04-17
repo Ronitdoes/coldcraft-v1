@@ -6,6 +6,7 @@ import { useGSAP } from "@gsap/react";
 import dynamic from "next/dynamic";
 import { playHoverSound, playClickSound } from "@/lib/sounds";
 import TextRollover from "@/components/TextRollover";
+import GetOverlaySVG from "@/components/GetOverlaySVG";
 
 const EmailFlowAnimation = dynamic(() => import("@/components/EmailFlowAnimation"), {
   ssr: false,
@@ -45,7 +46,8 @@ export default function Hero() {
       <EmailFlowAnimation />
       <div className="relative w-full text-center py-4 flex flex-col items-center justify-center pointer-events-none z-10">
         <h1 className="font-headline font-black text-[clamp(7rem,21vw,35rem)] kerning-tight text-primary select-none pointer-events-none relative mb-0 inline-block w-full leading-[0.80]">
-          <span className="flex justify-center overflow-visible">
+          <span className="flex justify-center overflow-visible relative">
+            <GetOverlaySVG />
             {"HIRED".split("").map((char, i) => (
               <span key={i} className="hero-char inline-block opacity-0" style={{ transformStyle: "preserve-3d" }}>{char}</span>
             ))}
