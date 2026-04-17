@@ -3,6 +3,8 @@ import { Inter, Space_Grotesk } from "next/font/google";
 import SmoothScroll from "@/components/SmoothScroll";
 import "./globals.css";
 
+import CustomScrollbar from "@/components/CustomScrollbar";
+
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -35,6 +37,7 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-background text-on-background selection:bg-primary selection:text-on-primary min-h-full flex flex-col" data-mode="connect">
+        <CustomScrollbar />
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>

@@ -4,6 +4,7 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import dynamic from "next/dynamic";
+import { playHoverSound, playClickSound } from "@/lib/sounds";
 
 const EmailFlowAnimation = dynamic(() => import("@/components/EmailFlowAnimation"), {
   ssr: false,
@@ -77,7 +78,11 @@ export default function Hero() {
                 <path className="hero-arrow-path" style={{ strokeDasharray: 100, strokeDashoffset: 100 }} d="M 35 265 L 15 280 L 35 295" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
               </svg>
             </div>
-            <button className="bg-white text-black px-8 py-6 md:px-12 md:py-8 transition-all duration-300 hover:bg-gray-200 active:scale-95 group shadow-xl flex flex-col items-center justify-center min-w-[280px] md:min-w-[400px] rounded-xl hover:scale-105 hover:shadow-2xl relative z-10">
+            <button 
+              onMouseEnter={playHoverSound}
+              onMouseDown={playClickSound}
+              className="bg-white text-black px-8 py-6 md:px-12 md:py-8 transition-all duration-300 hover:bg-gray-200 active:scale-95 group shadow-xl flex flex-col items-center justify-center min-w-[280px] md:min-w-[400px] rounded-xl hover:scale-105 hover:shadow-2xl relative z-10"
+            >
               <span className="block font-headline font-bold text-2xl md:text-3xl mb-1">
                 Write my cold mail
               </span>
@@ -94,6 +99,8 @@ export default function Hero() {
               </span>
             </button>
             <a
+              onMouseEnter={playHoverSound}
+              onMouseDown={playClickSound}
               className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/40 hover:text-white transition-colors"
               href="#"
             >
