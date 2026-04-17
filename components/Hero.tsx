@@ -31,7 +31,7 @@ export default function Hero() {
       .fromTo(".hero-line", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1.2, ease: "expo.inOut" }, "-=1.0")
       .fromTo(".hero-sub", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 1, stagger: 0.2 }, "-=0.8")
       .to(".hero-arrow-path", { strokeDashoffset: 0, duration: 1.5, ease: "power2.inOut", stagger: 0.2 }, "+=0.4")
-      .fromTo(".hero-arrow-text", { opacity: 0, y: -10, rotate: -20 }, { opacity: 1, y: 0, rotate: -12, duration: 0.6, ease: "back.out(2)" }, "-=0.3");
+      .fromTo(".hero-arrow-text", { opacity: 1, clipPath: "inset(-20% 100% -20% -20%)", rotate: -12 }, { clipPath: "inset(-20% -20% -20% -20%)", duration: 1.2, ease: "power2.inOut" }, "-=0.3");
   }, { scope: container });
 
   return (
@@ -52,19 +52,22 @@ export default function Hero() {
         </h1>
         <div className="flex flex-col items-center w-full">
           <div className="grid grid-cols-12 w-full text-left mt-12 mb-12 hero-sub opacity-0 translate-y-[30px]">
-            <div className="col-span-12 md:col-span-4">
-              <p className="font-body text-sm leading-relaxed opacity-60 uppercase tracking-widest">
-                THE GLOBAL CONFERENCE HIGHLIGHTING FRONTEND CLOUD
-                ADVANCEMENTS. CONNECT WITH THE ECOSYSTEM BUILDING THE WEB'S
-                BEST PRODUCTS CENTERED ON SCALE, RELIABILITY, AND SPEED.
+            <div className="col-span-12 md:col-span-4 min-h-[120px]">
+              <p className="font-body text-sm leading-relaxed opacity-60 uppercase tracking-[0.2em] font-bold">
+                STOP GETTING IGNORED.<br />
+                YOUR NEXT INTERNSHIP OR JOB<br />
+                STARTS WITH ONE EMAIL.
+              </p>
+              <p className="font-mono text-[10px] leading-relaxed opacity-30 uppercase tracking-[0.2em] mt-6 md:mt-8">
+                Built in MUJ · For MUJ students
               </p>
             </div>
             <div className="hidden md:block col-span-4"></div>
           </div>
           <div className="flex flex-col items-center gap-4 md:gap-6 mt-8 md:-mt-24 relative z-20 hero-sub opacity-0 translate-y-[30px] pointer-events-auto">
             {/* Elegant Hand-drawn Arrow (From Envelope to Button) */}
-            <div className="absolute left-1/2 top-1/2 hidden md:block pointer-events-none opacity-80 z-[-1] translate-x-[8rem] lg:translate-x-[9rem] -translate-y-[85%]">
-              <span className="hero-arrow-text absolute bottom-[20%] left-[15%] lg:left-[20%] text-white text-xl lg:text-3xl tracking-widest font-bold opacity-0 whitespace-nowrap" style={{ fontFamily: '"Caveat", "Comic Sans MS", cursive', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))' }}>
+            <div className="absolute left-1/2 top-1/2 hidden md:block pointer-events-none opacity-80 z-[-1] translate-x-[11.25rem] lg:translate-x-[13rem] -translate-y-[85%]">
+              <span className="hero-arrow-text absolute bottom-[40%] left-[10%] lg:left-[10%] text-white text-xl lg:text-3xl tracking-widest font-bold opacity-0 whitespace-nowrap" style={{ fontFamily: '"Caveat", "Comic Sans MS", cursive', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))' }}>
                 it's free!
               </span>
               <svg className="w-[20rem] h-[16rem] lg:w-[28rem] lg:h-[22rem]" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -74,12 +77,12 @@ export default function Hero() {
                 <path className="hero-arrow-path" style={{ strokeDasharray: 100, strokeDashoffset: 100 }} d="M 35 265 L 15 280 L 35 295" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
               </svg>
             </div>
-            <button className="bg-white text-black px-8 py-6 md:px-12 md:py-8 transition-all duration-300 hover:bg-gray-200 active:scale-95 group shadow-xl flex flex-col items-center justify-center min-w-[280px] md:min-w-[320px] rounded-xl hover:scale-105 hover:shadow-2xl relative z-10">
+            <button className="bg-white text-black px-8 py-6 md:px-12 md:py-8 transition-all duration-300 hover:bg-gray-200 active:scale-95 group shadow-xl flex flex-col items-center justify-center min-w-[280px] md:min-w-[400px] rounded-xl hover:scale-105 hover:shadow-2xl relative z-10">
               <span className="block font-headline font-bold text-2xl md:text-3xl mb-1">
-                Get Tickets
+                Write my cold mail
               </span>
               <span className="block font-body text-base md:text-lg opacity-70 font-medium flex items-center gap-2">
-                In-person / Virtual
+                Internship / Full-time
                 <div className="relative overflow-hidden flex items-center justify-center">
                   <span className="material-symbols-outlined text-xl transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:translate-x-[150%] group-hover:-translate-y-[150%]">
                     arrow_forward

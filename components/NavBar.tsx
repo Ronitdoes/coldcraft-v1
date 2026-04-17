@@ -30,7 +30,7 @@ export default function NavBar() {
       <div className="flex justify-center items-center gap-2 md:gap-3 justify-self-center nav-item text-[#ffffff] opacity-0 -translate-y-5">
         <Logo className="w-6 h-6 md:w-8 md:h-8" />
         <span className="text-lg md:text-2xl font-bold tracking-tighter font-headline">
-          C O L D C R A F T
+          COLDCRAFT
         </span>
       </div>
       <div className="flex justify-end items-center gap-4 md:gap-6 nav-item opacity-0 -translate-y-5">
@@ -41,7 +41,7 @@ export default function NavBar() {
           LOG IN
         </a>
         <button className="bg-white text-black px-4 py-2 md:px-6 md:py-2 font-headline font-bold uppercase text-[10px] md:text-xs tracking-widest hover:opacity-90 transition-all flex items-center gap-1 md:gap-2 rounded-md hover:scale-105 hover:shadow-lg group">
-          GET TICKETS
+          WRITE MY COLD MAIL
           <div className="relative overflow-hidden flex items-center justify-center">
             <span className="transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:translate-x-[150%] group-hover:-translate-y-[150%]">
               →

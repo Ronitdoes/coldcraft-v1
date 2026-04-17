@@ -14,8 +14,8 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "The Monolith",
-  description: "The global conference highlighting frontend cloud advancements.",
+  title: "Coldcraft",
+  description: "Stop getting ignored. Your next internship or job starts with one email.",
 };
 
 export default function RootLayout({

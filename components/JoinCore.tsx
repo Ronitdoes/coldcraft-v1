@@ -24,35 +24,40 @@ export default function JoinCore() {
 
   return (
     <section ref={container} className="join-core-section py-32 md:py-64 px-4 md:px-8 bg-black text-white text-center flex flex-col items-center justify-center overflow-hidden relative">
-      <h2 className="core-bg-text font-headline text-[15vw] font-black leading-none mb-8 md:mb-12 kerning-tight whitespace-nowrap opacity-20 pointer-events-none mix-blend-overlay absolute">
-        JOIN THE CORE
+      <h2 className="core-bg-text font-headline text-[16vw] md:text-[11vw] font-black leading-[0.85] mb-8 md:mb-12 kerning-tight opacity-20 pointer-events-none mix-blend-overlay absolute w-full">
+        STOP GETTING<br/>GHOSTED.
       </h2>
-      <h2 className="core-bg-text font-headline text-[15vw] font-black leading-none mb-8 md:mb-12 kerning-tight whitespace-nowrap relative z-10">
-        JOIN THE CORE
+      <h2 className="core-bg-text font-headline text-[16vw] md:text-[11vw] font-black leading-[0.85] mb-8 md:mb-12 kerning-tight relative z-10 w-full">
+        STOP GETTING<br/>GHOSTED.
       </h2>
-      <div className="flex flex-col items-center gap-4 relative z-20">
-        <button className="bg-[#e2e2e2] text-black px-12 py-6 md:px-24 md:py-10 transition-all duration-300 hover:bg-white active:scale-95 group shadow-lg rounded-lg hover:scale-105 hover:shadow-2xl">
-          <span className="block font-headline font-bold text-2xl md:text-4xl mb-2 flex items-center justify-center gap-2">
-            Get Tickets
-            <div className="relative overflow-hidden flex items-center justify-center h-6 w-6 md:h-8 md:w-8">
-              <span className="material-symbols-outlined text-2xl md:text-4xl transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:translate-x-[150%] group-hover:-translate-y-[150%]">
+      
+      <div className="flex flex-col items-center gap-4 relative z-20 mt-8 md:mt-12">
+        <p className="font-headline text-lg md:text-2xl font-bold uppercase tracking-widest opacity-80 mb-4 md:mb-8">
+          YOUR NEXT REPLY IS ONE MAIL AWAY
+        </p>
+
+        <button className="bg-white text-black px-8 py-6 md:px-12 md:py-8 transition-all duration-300 hover:bg-gray-200 active:scale-95 group shadow-xl flex flex-col items-center justify-center min-w-[280px] md:min-w-[400px] rounded-xl hover:scale-105 hover:shadow-2xl relative z-10">
+          <span className="block font-headline font-bold text-2xl md:text-3xl mb-1">
+            Write my cold mail
+          </span>
+          <span className="block font-body text-base md:text-lg opacity-70 font-medium flex items-center gap-2">
+            Internship / Full-time
+            <div className="relative overflow-hidden flex items-center justify-center">
+              <span className="material-symbols-outlined text-xl transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:translate-x-[150%] group-hover:-translate-y-[150%]">
                 arrow_forward
               </span>
-              <span className="material-symbols-outlined text-2xl md:text-4xl absolute transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] -translate-x-[150%] translate-y-[150%] group-hover:translate-x-0 group-hover:translate-y-0">
+              <span className="material-symbols-outlined text-xl absolute transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] -translate-x-[150%] translate-y-[150%] group-hover:translate-x-0 group-hover:translate-y-0">
                 arrow_forward
               </span>
             </div>
           </span>
-          <span className="block font-body text-base md:text-xl opacity-70 font-medium">
-            In-person / Virtual
-          </span>
         </button>
+        
         <a
-          className="mt-8 font-headline text-sm tracking-widest uppercase opacity-60 hover:opacity-100 transition-opacity"
+          className="mt-6 md:mt-8 font-mono text-[10px] tracking-[0.2em] uppercase text-white/40 hover:text-white transition-colors"
           href="#"
         >
-          ALREADY REGISTERED?{" "}
-          <span className="font-bold border-b border-white hover:border-transparent transition-colors duration-300">LOG IN</span>
+          ALREADY HAVE AN ACCOUNT? <span className="font-bold">LOG IN</span>
         </a>
       </div>
     </section>

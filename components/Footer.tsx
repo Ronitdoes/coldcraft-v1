@@ -25,12 +25,12 @@ export default function Footer() {
   return (
     <footer ref={container} className="w-full px-8 md:px-12 py-16 md:py-24 flex flex-col md:flex-row justify-between items-start gap-8 bg-[#0e0e0e] text-[#ffffff] font-['Inter'] text-xs tracking-widest uppercase tonal-shift-bg relative z-20 border-t border-[#222]">
       <div className="flex flex-col gap-8">
-        <div className="text-lg font-bold text-[#ffffff]">THE MONOLITH</div>
-        <p className="max-w-xs opacity-50 font-body">
-          AN INDEPENDENT ENGINEERING SUMMIT PRODUCED BY MONOLITH TECH CONF.
+        <div className="text-lg font-bold text-[#ffffff] font-headline">COLDCRAFT</div>
+        <p className="max-w-xs opacity-50 font-body uppercase">
+          Your next internship or job starts with one email.
         </p>
         <div className="text-[#ffffff]">
-          ©2024 MONOLITH TECH CONF. ALL RIGHTS RESERVED.
+          ©2026 COLDCRAFT. ALL RIGHTS RESERVED.
         </div>
       </div>
       <div className="flex flex-wrap gap-x-12 gap-y-4">
