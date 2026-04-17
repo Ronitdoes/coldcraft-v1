@@ -4,17 +4,29 @@ import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import Logo from "@/components/Logo";
-import { playHoverSound, playClickSound } from "@/lib/sounds";
+import { playHoverSound, playClickSound, getSoundEnabled, setSoundEnabled, subscribeToSoundStatus } from "@/lib/sounds";
 
 export default function NavBar() {
   const container = useRef<HTMLElement>(null);
   const [currentDate, setCurrentDate] = useState<string>("MAY 23 2024");
+  const [soundEnabled, setSoundState] = useState(true);
 
   useEffect(() => {
     const months = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
     const now = new Date();
     setCurrentDate(`${months[now.getMonth()]} ${now.getDate()} ${now.getFullYear()}`);
+    
+    setSoundState(getSoundEnabled());
+    return subscribeToSoundStatus(setSoundState);
   }, []);
+
+  const toggleSound = () => {
+    const nextState = !soundEnabled;
+    setSoundEnabled(nextState);
+    if (nextState) {
+      setTimeout(playHoverSound, 50); // Subtly confirm it's back on
+    }
+  };
 
   useGSAP(() => {
     gsap.fromTo(".nav-item",
@@ -40,6 +52,35 @@ export default function NavBar() {
         </span>
       </div>
       <div className="flex justify-end items-center gap-4 md:gap-6 nav-item opacity-0 -translate-y-5">
+        <button
+          onClick={toggleSound}
+          onMouseEnter={playHoverSound}
+          onMouseDown={playClickSound}
+          className="text-[#d4d4d4] hover:text-[#ffffff] transition-colors flex items-center justify-center hover:scale-110 active:scale-95"
+          title={soundEnabled ? "Mute Sounds" : "Enable Sounds"}
+        >
+          <div
+            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
+              soundEnabled ? 'bg-white' : 'bg-transparent border border-white/20'
+            }`}
+          >
+            <svg width="24" height="24" viewBox="0 0 32 32" className="overflow-visible">
+              <path
+                d={
+                  soundEnabled
+                    ? "M 8 16 Q 10 8, 12 12 T 16 16 T 20 12 T 24 16"
+                    : "M 8 16 Q 10 16, 12 16 T 16 16 T 20 16 T 24 16"
+                }
+                fill="none"
+                stroke={soundEnabled ? "#000000" : "#ffffff"}
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)]"
+              />
+            </svg>
+          </div>
+        </button>
         <a
           className="hidden sm:block font-headline uppercase tracking-widest text-xs font-bold text-[#d4d4d4] hover:text-[#ffffff] transition-colors"
           href="#"
