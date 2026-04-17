@@ -114,7 +114,7 @@ export default function BentoStats() {
           <div className="relative z-10 w-full max-w-2xl bg-surface-container border border-outline-variant/30 rounded p-5 md:p-6 shadow-2xl transform transition-transform duration-700 hover:scale-[1.02] hover:-translate-y-2 lg:ml-6">
             <div className="flex flex-col gap-2 font-mono text-xs md:text-sm text-on-surface-variant mb-6 border-b border-outline-variant/30 pb-4">
               <p>TO: <span className="text-on-surface opacity-80">ronit@razorpay.com</span></p>
-              <p>SUB: <span className="text-on-surface opacity-80">Frontend Intern - MUJ CSE, 2025</span></p>
+              <p>SUB: <span className="text-on-surface opacity-80">Frontend Intern - MUJ CSE, 2026</span></p>
             </div>
             
             <div className="flex flex-col gap-3 mb-8 opacity-40">

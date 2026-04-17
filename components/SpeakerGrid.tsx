@@ -66,7 +66,7 @@ export default function SpeakerGrid() {
               <h4 className="font-headline text-4xl md:text-5xl font-black tracking-tight leading-[1.05] mt-auto pb-6 md:pb-8 transform group-hover:translate-x-2 transition-transform duration-300">
                 73% of cold mails never get opened.
               </h4>
-              <div className="h-[120px] md:h-[140px] flex-shrink-0 border-t border-outline-variant/30 pt-6 overflow-hidden">
+              <div className="h-[120px] md:h-[140px] flex-shrink-0 border-t border-outline-variant/30 pt-6">
                 <p className="font-body text-sm opacity-60 uppercase tracking-widest transform group-hover:translate-x-2 transition-transform duration-300 delay-75 leading-relaxed">
                   Your subject line is the real interview. Most candidates fail before the recruiter reads a word.
                 </p>
@@ -80,7 +80,7 @@ export default function SpeakerGrid() {
               <h4 className="font-headline text-4xl md:text-5xl font-black tracking-tight leading-[1.05] mt-auto pb-6 md:pb-8 transform group-hover:translate-x-2 transition-transform duration-300">
                 Recruiters decide in 8 seconds.
               </h4>
-              <div className="h-[120px] md:h-[140px] flex-shrink-0 border-t border-outline-variant/30 pt-6 overflow-hidden">
+              <div className="h-[120px] md:h-[140px] flex-shrink-0 border-t border-outline-variant/30 pt-6">
                 <p className="font-body text-sm opacity-60 uppercase tracking-widest transform group-hover:translate-x-2 transition-transform duration-300 delay-75 leading-relaxed">
                   Most mails get deleted before the second line. Generic openers kill your chances instantly.
                 </p>
@@ -94,7 +94,7 @@ export default function SpeakerGrid() {
               <h4 className="font-headline text-4xl md:text-5xl font-black tracking-tight leading-[1.05] mt-auto pb-6 md:pb-8 transform group-hover:translate-x-2 transition-transform duration-300">
                 Generic mails<br />sent = no replies.
               </h4>
-              <div className="h-[120px] md:h-[140px] flex-shrink-0 border-t border-outline-variant/30 pt-6 overflow-hidden">
+              <div className="h-[120px] md:h-[140px] flex-shrink-0 border-t border-outline-variant/30 pt-6">
                 <p className="font-body text-sm opacity-60 uppercase tracking-widest transform group-hover:translate-x-2 transition-transform duration-300 delay-75 leading-relaxed">
                   Personalization is what gets you in the door. One good mail beats ten copy-pasted ones.
                 </p>
