@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef, useCallback } from "react";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
+import { gsap, useGSAP } from "@/lib/gsap";
 
 export default function CustomScrollbar() {
   const [isScrolling, setIsScrolling] = useState(false);

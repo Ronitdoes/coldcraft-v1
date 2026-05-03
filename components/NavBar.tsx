@@ -1,10 +1,8 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
+import { gsap, useGSAP } from "@/lib/gsap";
 import Logo from "@/components/Logo";
-import { playHoverSound, playClickSound } from "@/lib/sounds";
 import TextRollover from "@/components/TextRollover";
 
 export default function NavBar() {
@@ -26,15 +24,13 @@ export default function NavBar() {
   }, { scope: container });
 
   return (
-    <nav ref={container} className="bg-[#131313]/90 backdrop-blur-md flex justify-between md:grid md:grid-cols-3 items-center w-full pl-4 md:pl-8 pr-12 md:pr-16 py-4 md:py-6 max-w-full mx-auto fixed top-0 z-50 border-b border-[#333]">
-      <div className="hidden md:block font-headline uppercase tracking-widest text-xs font-bold text-[#d4d4d4] nav-item opacity-0 -translate-y-5">
+    <nav ref={container} className="bg-background/90 backdrop-blur-md flex justify-between md:grid md:grid-cols-3 items-center w-full pl-4 md:pl-8 pr-12 md:pr-16 py-4 md:py-6 max-w-full mx-auto fixed top-0 z-50 border-b border-outline-variant">
+      <div className="hidden md:block font-headline uppercase tracking-widest text-xs font-bold text-on-surface-variant nav-item opacity-0 -translate-y-5">
         {currentDate}
       </div>
       <div 
         onClick={() => (window as any).lenis?.scrollTo(0)}
-        onMouseEnter={playHoverSound}
-        onMouseDown={playClickSound}
-        className="flex justify-center items-center gap-2 md:gap-3 justify-self-center nav-item text-[#ffffff] opacity-0 -translate-y-5 cursor-pointer hover:opacity-80 transition-opacity"
+        className="flex justify-center items-center gap-2 md:gap-3 justify-self-center nav-item text-on-background opacity-0 -translate-y-5 cursor-pointer hover:opacity-80 transition-opacity"
       >
         <Logo className="w-6 h-6 md:w-8 md:h-8" />
         <span className="text-lg md:text-2xl font-bold tracking-tighter font-headline">
@@ -43,20 +39,16 @@ export default function NavBar() {
       </div>
       <div className="flex justify-end items-center gap-4 md:gap-6 nav-item opacity-0 -translate-y-5">
         <a
-          className="hidden sm:block font-headline uppercase tracking-widest text-xs font-bold text-[#d4d4d4] hover:text-[#ffffff] transition-colors"
+          className="hidden sm:block font-headline uppercase tracking-widest text-xs font-bold text-on-surface-variant hover:text-on-background transition-colors"
           href="#"
-          onMouseEnter={playHoverSound}
-          onMouseDown={playClickSound}
         >
           <TextRollover text="LOG IN" />
         </a>
         <button
           onMouseEnter={() => {
-            playHoverSound();
             setIsBtnHovered(true);
           }}
           onMouseLeave={() => setIsBtnHovered(false)}
-          onMouseDown={playClickSound}
           className="bg-white text-black px-4 py-2 md:px-6 md:py-2 font-headline font-bold uppercase text-[10px] md:text-xs tracking-widest hover:opacity-90 transition-all flex items-center gap-1 md:gap-2 rounded-md hover:scale-105 hover:shadow-lg group"
         >
           <TextRollover text="WRITE MY COLD MAIL" trigger={isBtnHovered} />

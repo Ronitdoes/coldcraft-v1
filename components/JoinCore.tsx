@@ -1,19 +1,12 @@
 "use client";
 
-import { useRef, useState } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
-import { playHoverSound, playClickSound } from "@/lib/sounds";
+import { useRef } from "react";
+import PrimaryButton from "@/components/ui/PrimaryButton";
+import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import TextRollover from "@/components/TextRollover";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 export default function JoinCore() {
   const container = useRef<HTMLElement>(null);
-  const [isHovered, setIsHovered] = useState(false);
 
   useGSAP(() => {
     gsap.fromTo(".core-bg-text",
@@ -40,34 +33,9 @@ export default function JoinCore() {
           YOUR NEXT REPLY IS ONE MAIL AWAY
         </p>
 
-        <button
-          onMouseEnter={() => {
-            playHoverSound();
-            setIsHovered(true);
-          }}
-          onMouseLeave={() => setIsHovered(false)}
-          onMouseDown={playClickSound}
-          className="bg-white text-black px-8 py-6 md:px-12 md:py-8 transition-all duration-300 hover:bg-gray-200 active:scale-95 group shadow-xl flex flex-col items-center justify-center min-w-[280px] md:min-w-[400px] rounded-xl hover:scale-105 hover:shadow-2xl relative z-10"
-        >
-          <span className="block font-headline font-bold text-2xl md:text-3xl mb-1">
-            Write my cold mail
-          </span>
-          <span className="block font-body text-base md:text-lg opacity-70 font-medium flex items-center gap-2">
-            <TextRollover text="Internship / Full-time" trigger={isHovered} />
-            <span className="relative overflow-hidden inline-flex items-center justify-center">
-              <span className="material-symbols-outlined text-xl transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:translate-x-[150%] group-hover:-translate-y-[150%]">
-                arrow_forward
-              </span>
-              <span className="material-symbols-outlined text-xl absolute transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] -translate-x-[150%] translate-y-[150%] group-hover:translate-x-0 group-hover:translate-y-0">
-                arrow_forward
-              </span>
-            </span>
-          </span>
-        </button>
+        <PrimaryButton title="Write my cold mail" subtitle="Internship / Full-time" />
 
         <a
-          onMouseEnter={playHoverSound}
-          onMouseDown={playClickSound}
           className="mt-6 md:mt-8 font-mono text-[10px] tracking-[0.2em] uppercase text-white/40 hover:text-white transition-colors"
           href="#"
         >

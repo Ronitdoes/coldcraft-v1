@@ -1,13 +1,32 @@
 "use client";
 
 import { useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
+import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+const SPEAKERS = [
+  {
+    id: "01",
+    title: "73% of cold mails never get opened.",
+    desc: "Your subject line is the real interview. Most candidates fail before the recruiter reads a word.",
+    bgClass: "bg-surface-container-low",
+  },
+  {
+    id: "02",
+    title: "Recruiters decide in 8 seconds.",
+    desc: "Most mails get deleted before the second line. Generic openers kill your chances instantly.",
+    bgClass: "bg-surface-container-high",
+  },
+  {
+    id: "03",
+    title: (
+      <>
+        Generic mails<br />sent = no replies.
+      </>
+    ),
+    desc: "Personalization is what gets you in the door. One good mail beats ten copy-pasted ones.",
+    bgClass: "bg-surface-container-low",
+  },
+];
 
 export default function SpeakerGrid() {
   const container = useRef<HTMLElement>(null);
@@ -60,45 +79,21 @@ export default function SpeakerGrid() {
           </div>
         </div>
         <div className="speaker-grid grid grid-cols-1 md:grid-cols-3 gap-0 border-l border-outline-variant">
-          <div className="speaker-card aspect-[4/5] md:aspect-square bg-surface-container-low p-6 md:p-8 border-r border-b border-outline-variant group hover:bg-primary transition-colors duration-500 will-change-[background-color]">
-            <div className="flex flex-col h-full group-hover:text-on-primary">
-              <span className="font-headline text-4xl font-bold opacity-30 md:opacity-100 flex-shrink-0 mb-8 md:mb-12">01</span>
-              <h4 className="font-headline text-4xl md:text-5xl font-black tracking-tight leading-[1.05] mt-auto pb-6 md:pb-8 group-hover:translate-x-2 transition-transform duration-300">
-                73% of cold mails never get opened.
-              </h4>
-              <div className="h-[120px] md:h-[140px] flex-shrink-0 border-t border-outline-variant/30 pt-6">
-                <p className="font-body text-sm opacity-60 uppercase tracking-widest group-hover:translate-x-2 transition-transform duration-300 delay-75 leading-relaxed">
-                  Your subject line is the real interview. Most candidates fail before the recruiter reads a word.
-                </p>
+          {SPEAKERS.map((speaker) => (
+            <div key={speaker.id} className={`speaker-card aspect-[4/5] md:aspect-square ${speaker.bgClass} p-6 md:p-8 border-r border-b border-outline-variant group hover:bg-primary transition-colors duration-500 will-change-[background-color]`}>
+              <div className="flex flex-col h-full group-hover:text-on-primary">
+                <span className="font-headline text-4xl font-bold opacity-30 md:opacity-100 flex-shrink-0 mb-8 md:mb-12">{speaker.id}</span>
+                <h4 className="font-headline text-4xl md:text-5xl font-black tracking-tight leading-[1.05] mt-auto pb-6 md:pb-8 group-hover:translate-x-2 transition-transform duration-300">
+                  {speaker.title}
+                </h4>
+                <div className="h-[120px] md:h-[140px] flex-shrink-0 border-t border-outline-variant/30 pt-6">
+                  <p className="font-body text-sm opacity-60 uppercase tracking-widest group-hover:translate-x-2 transition-transform duration-300 delay-75 leading-relaxed">
+                    {speaker.desc}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="speaker-card aspect-[4/5] md:aspect-square bg-surface-container-high p-6 md:p-8 border-r border-b border-outline-variant group hover:bg-primary transition-colors duration-500 will-change-[background-color]">
-            <div className="flex flex-col h-full group-hover:text-on-primary">
-              <span className="font-headline text-4xl font-bold opacity-30 md:opacity-100 flex-shrink-0 mb-8 md:mb-12">02</span>
-              <h4 className="font-headline text-4xl md:text-5xl font-black tracking-tight leading-[1.05] mt-auto pb-6 md:pb-8 group-hover:translate-x-2 transition-transform duration-300">
-                Recruiters decide in 8 seconds.
-              </h4>
-              <div className="h-[120px] md:h-[140px] flex-shrink-0 border-t border-outline-variant/30 pt-6">
-                <p className="font-body text-sm opacity-60 uppercase tracking-widest group-hover:translate-x-2 transition-transform duration-300 delay-75 leading-relaxed">
-                  Most mails get deleted before the second line. Generic openers kill your chances instantly.
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="speaker-card aspect-[4/5] md:aspect-square bg-surface-container-low p-6 md:p-8 border-r border-b border-outline-variant group hover:bg-primary transition-colors duration-500 will-change-[background-color]">
-            <div className="flex flex-col h-full group-hover:text-on-primary">
-              <span className="font-headline text-4xl font-bold opacity-30 md:opacity-100 flex-shrink-0 mb-8 md:mb-12">03</span>
-              <h4 className="font-headline text-4xl md:text-5xl font-black tracking-tight leading-[1.05] mt-auto pb-6 md:pb-8 group-hover:translate-x-2 transition-transform duration-300">
-                Generic mails<br />sent = no replies.
-              </h4>
-              <div className="h-[120px] md:h-[140px] flex-shrink-0 border-t border-outline-variant/30 pt-6">
-                <p className="font-body text-sm opacity-60 uppercase tracking-widest group-hover:translate-x-2 transition-transform duration-300 delay-75 leading-relaxed">
-                  Personalization is what gets you in the door. One good mail beats ten copy-pasted ones.
-                </p>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>

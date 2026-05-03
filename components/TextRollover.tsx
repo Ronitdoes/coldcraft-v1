@@ -1,8 +1,7 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
+import { gsap, useGSAP } from "@/lib/gsap";
 
 interface TextRolloverProps {
   text: string;

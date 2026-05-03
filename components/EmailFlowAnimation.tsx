@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import gsap from "gsap";
+import { gsap } from "@/lib/gsap";
 
 export default function FloatingMail() {
   const wrapperRef = useRef<HTMLDivElement>(null);
