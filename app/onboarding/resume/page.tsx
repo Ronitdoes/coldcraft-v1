@@ -120,10 +120,9 @@ export default function ResumeUploadPage() {
         <div className="flex gap-[8px] mb-4">
           <div className="w-[28px] h-[4px] bg-white rounded-sm" />
           <div className="w-[28px] h-[4px] bg-white/10 rounded-sm" />
-          <div className="w-[28px] h-[4px] bg-white/10 rounded-sm" />
         </div>
         <div className="font-mono uppercase tracking-[0.2em] text-xs text-white/60 text-center whitespace-nowrap">
-          STEP 01 OF 03 &mdash; UPLOAD RESUME
+          STEP 01 OF 02 &mdash; UPLOAD RESUME
         </div>
       </div>
 

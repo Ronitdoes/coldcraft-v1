@@ -98,7 +98,7 @@ export default function ProfileReviewPage() {
       return;
     }
     
-    router.push("/onboarding/compose");
+    router.push("/dashboard");
   };
 
   const removeChip = (type: 'skill' | 'project', index: number) => {
@@ -147,10 +147,9 @@ export default function ProfileReviewPage() {
         <div className="flex gap-[6px] mb-4">
           <div className="w-[28px] h-[4px] bg-white/10 rounded-sm" />
           <div className="w-[28px] h-[4px] bg-white rounded-sm" />
-          <div className="w-[28px] h-[4px] bg-white/10 rounded-sm" />
         </div>
         <div className="font-mono uppercase tracking-[0.2em] text-xs text-white/60 text-center whitespace-nowrap">
-          STEP 02 OF 03 &mdash; REVIEW YOUR PROFILE
+          STEP 02 OF 02 &mdash; REVIEW YOUR PROFILE
         </div>
       </div>
 
