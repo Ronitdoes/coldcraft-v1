@@ -31,6 +31,8 @@ export default function CustomScrollbar() {
     return Math.max(140, window.innerHeight * ratio);
   }, []);
 
+  const [canScroll, setCanScroll] = useState(true);
+
   const updateThumbPosition = useCallback((progress: number) => {
     if (!thumbRef.current) return;
     const thumbH = getThumbHeight();
@@ -50,6 +52,9 @@ export default function CustomScrollbar() {
       const maxScroll =
         document.documentElement.scrollHeight -
         document.documentElement.clientHeight;
+
+      setCanScroll(maxScroll > 0);
+
       if (maxScroll > 0) {
         progressRef.current = winScroll / maxScroll;
         updateThumbPosition(progressRef.current);
@@ -109,7 +114,7 @@ export default function CustomScrollbar() {
     [getThumbHeight]
   );
 
-  if (!isMounted || pathname === "/login" || pathname === "/onboarding/resume" || pathname === "/onboarding/profile") return null;
+  if (!isMounted || pathname === "/login" || pathname === "/onboarding/resume" || pathname === "/onboarding/profile" || !canScroll) return null;
 
   return (
     <div

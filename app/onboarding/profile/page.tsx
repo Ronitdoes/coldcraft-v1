@@ -149,7 +149,7 @@ export default function ProfileReviewPage() {
           <div className="w-[28px] h-[4px] bg-white rounded-sm" />
         </div>
         <div className="font-mono uppercase tracking-[0.2em] text-xs text-white/60 text-center whitespace-nowrap">
-          STEP 02 OF 02 &mdash; REVIEW YOUR PROFILE
+          REVIEW YOUR PROFILE
         </div>
       </div>
 

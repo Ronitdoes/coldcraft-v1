@@ -5,6 +5,7 @@ import { gsap, useGSAP } from "@/lib/gsap";
 
 interface TextRolloverProps {
   text: string;
+  cloneText?: string;
   className?: string;
   stagger?: number;
   duration?: number;
@@ -13,11 +14,13 @@ interface TextRolloverProps {
 
 export default function TextRollover({ 
   text, 
+  cloneText,
   className = "", 
   stagger = 0.015,
   duration = 0.45,
   trigger
 }: TextRolloverProps) {
+  const displayCloneText = cloneText || text;
   const containerRef = useRef<HTMLDivElement>(null);
   const charsRef = useRef<HTMLElement[]>([]);
   const charsCloneRef = useRef<HTMLElement[]>([]);
@@ -34,8 +37,8 @@ export default function TextRollover({
 
     const handleMouseLeave = () => {
       gsap.killTweensOf([charsRef.current, charsCloneRef.current]);
-      gsap.set(charsRef.current, { yPercent: 0 });
-      gsap.set(charsCloneRef.current, { yPercent: 0 });
+      gsap.to(charsRef.current, { yPercent: 0, stagger: stagger, duration: duration, ease: "power3.out" });
+      gsap.to(charsCloneRef.current, { yPercent: 0, stagger: stagger, duration: duration, ease: "power3.out" });
     };
 
     // If no external trigger is provided, use internal listeners
@@ -60,8 +63,8 @@ export default function TextRollover({
       gsap.to(charsCloneRef.current, { yPercent: -100, stagger: stagger, duration: duration, ease: "power3.out" });
     } else {
       gsap.killTweensOf([charsRef.current, charsCloneRef.current]);
-      gsap.set(charsRef.current, { yPercent: 0 });
-      gsap.set(charsCloneRef.current, { yPercent: 0 });
+      gsap.to(charsRef.current, { yPercent: 0, stagger: stagger, duration: duration, ease: "power3.out" });
+      gsap.to(charsCloneRef.current, { yPercent: 0, stagger: stagger, duration: duration, ease: "power3.out" });
     }
   }, [trigger, stagger, duration]);
 
@@ -78,7 +81,7 @@ export default function TextRollover({
         ))}
       </div>
       <div className="flex absolute top-full left-0 z-10 w-full">
-        {text.split("").map((char, i) => (
+        {displayCloneText.split("").map((char, i) => (
           <span key={i} className="roll-char-clone inline-block whitespace-pre">
             {char === " " ? "\u00A0" : char}
           </span>

@@ -73,7 +73,7 @@ export default function NavBar() {
       <div className="flex justify-end items-center gap-4 md:gap-6 nav-item opacity-0 -translate-y-5">
         {userEmail ? (
           <div className="hidden sm:flex items-center gap-6">
-            <span className="font-mono uppercase tracking-widest text-[10px] text-white/40">
+            <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/40">
               {userEmail}
             </span>
             <button
@@ -82,7 +82,7 @@ export default function NavBar() {
                 await supabase.auth.signOut();
                 window.location.reload();
               }}
-              className="font-headline uppercase tracking-widest text-xs font-bold text-on-surface-variant hover:text-white transition-colors"
+              className="hidden sm:block font-headline uppercase tracking-widest text-xs font-bold text-on-surface-variant hover:text-on-background transition-colors"
             >
               <TextRollover text="LOG OUT" />
             </button>
