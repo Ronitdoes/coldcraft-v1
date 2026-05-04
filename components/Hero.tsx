@@ -1,9 +1,11 @@
 "use client";
 
 import { useRef } from "react";
+import { useRouter } from "next/navigation";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import { gsap, useGSAP } from "@/lib/gsap";
 import dynamic from "next/dynamic";
+import { createClient } from "@/utils/supabase/client";
 import TextRollover from "@/components/TextRollover";
 import GetOverlaySVG from "@/components/GetOverlaySVG";
 
@@ -14,6 +16,17 @@ const EmailFlowAnimation = dynamic(() => import("@/components/EmailFlowAnimation
 
 export default function Hero() {
   const container = useRef<HTMLElement>(null);
+  const router = useRouter();
+
+  const handleCTA = async () => {
+    const supabase = createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      router.push("/onboarding/resume");
+    } else {
+      router.push("/login");
+    }
+  };
 
   useGSAP(() => {
     const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
@@ -39,7 +52,7 @@ export default function Hero() {
   return (
     <section 
       ref={container}
-      className="min-h-screen flex flex-col justify-center px-4 md:px-8 pb-16 md:pb-32 pt-32 md:pt-48 overflow-hidden bg-black perspective-[1000px] relative"
+      className="min-h-screen flex flex-col justify-center px-4 md:px-8 pb-8 md:pb-16 pt-32 md:pt-48 overflow-hidden bg-black perspective-[1000px] relative"
     >
       <EmailFlowAnimation />
       <div className="relative w-full text-center py-4 flex flex-col items-center justify-center pointer-events-none z-10">
@@ -77,10 +90,14 @@ export default function Hero() {
                 <path className="hero-arrow-path" style={{ strokeDasharray: 100, strokeDashoffset: 100 }} d="M 35 265 L 15 280 L 35 295" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
               </svg>
             </div>
-            <PrimaryButton title="Write my cold mail" subtitle="Internship / Full-time" />
+            <PrimaryButton 
+              title="Write my cold mail" 
+              subtitle="Internship / Full-time" 
+              onClick={handleCTA}
+            />
             <a
               className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/40 hover:text-white transition-colors"
-              href="#"
+              href="/login"
             >
               ALREADY REGISTERED? <span className="font-bold">LOG IN</span>
             </a>

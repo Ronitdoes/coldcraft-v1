@@ -63,7 +63,7 @@ export default function SpeakerGrid() {
   }, { scope: container });
 
   return (
-    <section ref={container} className="py-16 md:py-32 px-4 md:px-8 bg-background overflow-hidden relative">
+    <section ref={container} className="pt-8 pb-16 md:pt-16 md:pb-32 px-4 md:px-8 bg-background overflow-hidden relative">
       <div className="max-w-7xl mx-auto perspective-[1200px]">
         <div className="flex justify-between items-end mb-12 md:mb-24 border-b border-outline-variant pb-4 md:pb-8 speaker-header">
           <h3 className="font-headline text-4xl md:text-7xl font-black tracking-tighter uppercase relative">

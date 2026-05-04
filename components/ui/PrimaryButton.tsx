@@ -3,19 +3,20 @@
 import { useState } from "react";
 import TextRollover from "@/components/TextRollover";
 
-interface PrimaryButtonProps {
+interface PrimaryButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   title: string;
   subtitle: string;
 }
 
-export default function PrimaryButton({ title, subtitle }: PrimaryButtonProps) {
+export default function PrimaryButton({ title, subtitle, className = "", ...props }: PrimaryButtonProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <button
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="bg-white text-black px-8 py-6 md:px-12 md:py-8 transition-all duration-300 hover:bg-gray-200 active:scale-95 group shadow-xl flex flex-col items-center justify-center min-w-[280px] md:min-w-[400px] rounded-xl hover:scale-105 hover:shadow-2xl relative z-10"
+      className={`bg-white text-black px-8 py-6 md:px-12 md:py-8 transition-all duration-300 hover:bg-gray-200 active:scale-95 group shadow-xl flex flex-col items-center justify-center min-w-[280px] md:min-w-[400px] rounded-xl hover:scale-105 hover:shadow-2xl relative z-10 ${className}`}
+      {...props}
     >
       <span className="block font-headline font-bold text-2xl md:text-3xl mb-1">
         {title}

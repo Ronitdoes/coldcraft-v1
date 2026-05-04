@@ -1,19 +1,52 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { gsap, useGSAP } from "@/lib/gsap";
 import Logo from "@/components/Logo";
 import TextRollover from "@/components/TextRollover";
+import { createClient } from "@/utils/supabase/client";
 
 export default function NavBar() {
   const container = useRef<HTMLElement>(null);
   const [currentDate, setCurrentDate] = useState<string>("MAY 23 2024");
   const [isBtnHovered, setIsBtnHovered] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const router = useRouter();
+
+  const handleCTA = async () => {
+    const supabase = createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      router.push("/onboarding/resume");
+    } else {
+      router.push("/login");
+    }
+  };
 
   useEffect(() => {
     const months = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
     const now = new Date();
     setCurrentDate(`${months[now.getMonth()]} ${now.getDate()} ${now.getFullYear()}`);
+
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        setUserEmail(user.email || "USER");
+      }
+    });
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.user) {
+        setUserEmail(session.user.email || "USER");
+      } else {
+        setUserEmail(null);
+      }
+    });
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
   }, []);
 
   useGSAP(() => {
@@ -38,13 +71,32 @@ export default function NavBar() {
         </span>
       </div>
       <div className="flex justify-end items-center gap-4 md:gap-6 nav-item opacity-0 -translate-y-5">
-        <a
-          className="hidden sm:block font-headline uppercase tracking-widest text-xs font-bold text-on-surface-variant hover:text-on-background transition-colors"
-          href="#"
-        >
-          <TextRollover text="LOG IN" />
-        </a>
+        {userEmail ? (
+          <div className="hidden sm:flex items-center gap-6">
+            <span className="font-mono uppercase tracking-widest text-[10px] text-white/40">
+              {userEmail}
+            </span>
+            <button
+              onClick={async () => {
+                const supabase = createClient();
+                await supabase.auth.signOut();
+                window.location.reload();
+              }}
+              className="font-headline uppercase tracking-widest text-xs font-bold text-on-surface-variant hover:text-white transition-colors"
+            >
+              <TextRollover text="LOG OUT" />
+            </button>
+          </div>
+        ) : (
+          <a
+            className="hidden sm:block font-headline uppercase tracking-widest text-xs font-bold text-on-surface-variant hover:text-on-background transition-colors"
+            href="/login"
+          >
+            <TextRollover text="LOG IN" />
+          </a>
+        )}
         <button
+          onClick={handleCTA}
           onMouseEnter={() => {
             setIsBtnHovered(true);
           }}

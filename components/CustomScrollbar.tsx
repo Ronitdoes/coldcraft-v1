@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState, useRef, useCallback } from "react";
+import { usePathname } from "next/navigation";
 import { gsap, useGSAP } from "@/lib/gsap";
 
 export default function CustomScrollbar() {
+  const pathname = usePathname();
   const [isScrolling, setIsScrolling] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const scrollTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -107,7 +109,7 @@ export default function CustomScrollbar() {
     [getThumbHeight]
   );
 
-  if (!isMounted) return null;
+  if (!isMounted || pathname === "/login" || pathname === "/onboarding/resume" || pathname === "/onboarding/profile") return null;
 
   return (
     <div
