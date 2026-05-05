@@ -33,7 +33,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${spaceGrotesk.variable} ${caveat.variable} h-full antialiased dark`}
+      className={`${inter.variable} ${spaceGrotesk.variable} ${caveat.variable} antialiased dark`}
     >
       <head>
         <link
@@ -41,7 +41,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="bg-background text-on-background selection:bg-primary selection:text-on-primary min-h-full flex flex-col" data-mode="connect">
+      <body className="bg-background text-on-background selection:bg-primary selection:text-on-primary" data-mode="connect">
         <CustomScrollbar />
         <SmoothScroll>{children}</SmoothScroll>
       </body>

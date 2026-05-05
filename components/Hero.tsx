@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import { gsap, useGSAP } from "@/lib/gsap";
 import dynamic from "next/dynamic";
-import { createClient } from "@/utils/supabase/client";
 import TextRollover from "@/components/TextRollover";
 import GetOverlaySVG from "@/components/GetOverlaySVG";
+import { useAuth } from "@/hooks/useAuth";
 
 const EmailFlowAnimation = dynamic(() => import("@/components/EmailFlowAnimation"), {
   ssr: false,
@@ -18,10 +18,10 @@ export default function Hero() {
   const container = useRef<HTMLElement>(null);
   const router = useRouter();
 
-  const handleCTA = async () => {
-    const supabase = createClient();
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session?.user) {
+  const { user } = useAuth();
+
+  const handleCTA = () => {
+    if (user) {
       router.push("/onboarding/resume");
     } else {
       router.push("/login");

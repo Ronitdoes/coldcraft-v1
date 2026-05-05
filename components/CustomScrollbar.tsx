@@ -114,7 +114,7 @@ export default function CustomScrollbar() {
     [getThumbHeight]
   );
 
-  if (!isMounted || pathname === "/login" || pathname === "/onboarding/resume" || pathname === "/onboarding/profile" || !canScroll) return null;
+  if (!isMounted || pathname === "/login" || pathname === "/onboarding/resume" || pathname === "/onboarding/profile" || pathname === "/dashboard" || !canScroll) return null;
 
   return (
     <div

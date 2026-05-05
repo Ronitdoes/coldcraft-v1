@@ -1,52 +1,20 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { gsap, useGSAP } from "@/lib/gsap";
 import Logo from "@/components/Logo";
 import TextRollover from "@/components/TextRollover";
-import { createClient } from "@/utils/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function NavBar() {
   const container = useRef<HTMLElement>(null);
   const [currentDate, setCurrentDate] = useState<string>("MAY 23 2024");
-  const [isBtnHovered, setIsBtnHovered] = useState(false);
-  const [userEmail, setUserEmail] = useState<string | null>(null);
-  const router = useRouter();
-
-  const handleCTA = async () => {
-    const supabase = createClient();
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session?.user) {
-      router.push("/onboarding/resume");
-    } else {
-      router.push("/login");
-    }
-  };
+  const { email, signOut } = useAuth();
 
   useEffect(() => {
     const months = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
     const now = new Date();
     setCurrentDate(`${months[now.getMonth()]} ${now.getDate()} ${now.getFullYear()}`);
-
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) {
-        setUserEmail(user.email || "USER");
-      }
-    });
-
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session?.user) {
-        setUserEmail(session.user.email || "USER");
-      } else {
-        setUserEmail(null);
-      }
-    });
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
   }, []);
 
   useGSAP(() => {
@@ -71,48 +39,29 @@ export default function NavBar() {
         </span>
       </div>
       <div className="flex justify-end items-center gap-4 md:gap-6 nav-item opacity-0 -translate-y-5">
-        {userEmail ? (
-          <div className="hidden sm:flex items-center gap-6">
-            <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/40">
-              {userEmail}
+        {email ? (
+          <div className="flex items-center gap-4 md:gap-6">
+            <span className="hidden sm:block font-mono text-[10px] tracking-[0.2em] uppercase text-white/40">
+              {email}
             </span>
             <button
               onClick={async () => {
-                const supabase = createClient();
-                await supabase.auth.signOut();
+                await signOut();
                 window.location.reload();
               }}
-              className="hidden sm:block font-headline uppercase tracking-widest text-xs font-bold text-on-surface-variant hover:text-on-background transition-colors"
+              className="font-headline uppercase tracking-widest text-xs font-bold text-on-surface-variant hover:text-on-background transition-colors"
             >
               <TextRollover text="LOG OUT" />
             </button>
           </div>
         ) : (
           <a
-            className="hidden sm:block font-headline uppercase tracking-widest text-xs font-bold text-on-surface-variant hover:text-on-background transition-colors"
+            className="font-headline uppercase tracking-widest text-xs font-bold text-on-surface-variant hover:text-on-background transition-colors"
             href="/login"
           >
             <TextRollover text="LOG IN" />
           </a>
         )}
-        <button
-          onClick={handleCTA}
-          onMouseEnter={() => {
-            setIsBtnHovered(true);
-          }}
-          onMouseLeave={() => setIsBtnHovered(false)}
-          className="bg-white text-black px-4 py-2 md:px-6 md:py-2 font-headline font-bold uppercase text-[10px] md:text-xs tracking-widest hover:opacity-90 transition-all flex items-center gap-1 md:gap-2 rounded-md hover:scale-105 hover:shadow-lg group"
-        >
-          <TextRollover text="WRITE MY COLD MAIL" trigger={isBtnHovered} />
-          <span className="relative overflow-hidden inline-flex items-center justify-center">
-            <span className="transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:translate-x-[150%] group-hover:-translate-y-[150%]">
-              →
-            </span>
-            <span className="absolute transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] -translate-x-[150%] translate-y-[150%] group-hover:translate-x-0 group-hover:translate-y-0">
-              →
-            </span>
-          </span>
-        </button>
       </div>
     </nav>
   );
