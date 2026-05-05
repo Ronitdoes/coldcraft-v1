@@ -330,6 +330,7 @@ export default function DashboardClient() {
             title="New Cold Mail"
             subtitle="Personalise"
             variant="flat"
+            size="sm"
             onClick={() => router.push("/compose")}
             className="w-full md:w-auto"
           />
@@ -337,6 +338,7 @@ export default function DashboardClient() {
             title="Follow Up Mail"
             subtitle="Stay Persistent"
             variant="flat"
+            size="sm"
             onClick={() => router.push("/compose?type=followup")}
             className="w-full md:w-auto border border-white/10"
           />

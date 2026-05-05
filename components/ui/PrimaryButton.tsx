@@ -8,6 +8,8 @@ interface PrimaryButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   subtitle: string;
   /** "default" = rounded with shadow (landing page), "flat" = sharp corners no shadow (dashboard/app) */
   variant?: "default" | "flat";
+  /** Button size */
+  size?: "default" | "sm";
   /** Optional icon element (e.g., SVG) rendered before the title */
   icon?: React.ReactNode;
   /** Shows a spinner and disables interactions */
@@ -20,6 +22,7 @@ export default function PrimaryButton({
   title,
   subtitle,
   variant = "default",
+  size = "default",
   icon,
   loading = false,
   loadingSubtitle = "Please wait...",
@@ -29,22 +32,30 @@ export default function PrimaryButton({
 }: PrimaryButtonProps) {
   const [isHovered, setIsHovered] = useState(false);
 
-  const baseClasses = "bg-white text-black transition-all duration-300 active:scale-95 group flex flex-col items-center justify-center";
+  const baseClasses = "bg-white text-black transition-all duration-300 hover:scale-105 active:scale-95 group flex flex-col items-center justify-center";
+  
+  const paddingClasses = size === "sm"
+    ? "px-6 py-4 md:px-8 md:py-4"
+    : (variant === "flat" ? "px-8 py-5 md:px-10 md:py-5" : "px-8 py-6 md:px-12 md:py-8");
+
   const variantClasses = variant === "flat"
-    ? "px-8 py-5 md:px-10 md:py-5 min-w-0"
-    : "px-8 py-6 md:px-12 md:py-8 shadow-xl min-w-[280px] md:min-w-[400px] rounded-xl hover:scale-105 hover:shadow-2xl hover:bg-gray-200";
+    ? "min-w-0"
+    : `shadow-xl min-w-[280px] md:min-w-[400px] rounded-xl hover:shadow-2xl hover:bg-gray-200`;
 
   const isDisabled = disabled || loading;
+
+  const titleSize = size === "sm" ? "text-xl md:text-2xl" : "text-2xl md:text-3xl";
+  const subtitleSize = size === "sm" ? "text-sm md:text-base" : "text-base md:text-lg";
 
   return (
     <button
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       disabled={isDisabled}
-      className={`${baseClasses} ${variantClasses} ${isDisabled ? "opacity-50 cursor-not-allowed" : ""} relative z-10 ${className}`}
+      className={`${baseClasses} ${variantClasses} ${paddingClasses} ${isDisabled ? "opacity-50 cursor-not-allowed" : ""} relative z-10 ${className}`}
       {...props}
     >
-      <span className="block font-headline font-bold text-2xl md:text-3xl mb-1 flex items-center gap-3">
+      <span className={`block font-headline font-bold ${titleSize} mb-1 flex items-center gap-3`}>
         {loading ? (
           <>
             <svg className="animate-spin w-6 h-6 md:w-8 md:h-8 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -60,7 +71,7 @@ export default function PrimaryButton({
           </>
         )}
       </span>
-      <span className="block font-body text-base md:text-lg opacity-70 font-medium flex items-center gap-2">
+      <span className={`block font-body ${subtitleSize} opacity-70 font-medium flex items-center gap-2`}>
         <TextRollover text={loading ? loadingSubtitle : subtitle} trigger={loading ? true : isHovered} />
         {!loading && (
           <span className="relative overflow-hidden inline-flex items-center justify-center">
