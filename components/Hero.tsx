@@ -8,6 +8,7 @@ import dynamic from "next/dynamic";
 import TextRollover from "@/components/TextRollover";
 import GetOverlaySVG from "@/components/GetOverlaySVG";
 import { useAuth } from "@/hooks/useAuth";
+import { createClient } from "@/utils/supabase/client";
 
 const EmailFlowAnimation = dynamic(() => import("@/components/EmailFlowAnimation"), {
   ssr: false,
@@ -20,9 +21,20 @@ export default function Hero() {
 
   const { user } = useAuth();
 
-  const handleCTA = () => {
+  const handleCTA = async () => {
     if (user) {
-      router.push("/onboarding/resume");
+      const supabase = createClient();
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', user.id)
+        .single();
+
+      if (profile) {
+        router.push("/dashboard");
+      } else {
+        router.push("/onboarding/resume");
+      }
     } else {
       router.push("/login");
     }
@@ -95,12 +107,6 @@ export default function Hero() {
               subtitle="Internship / Full-time" 
               onClick={handleCTA}
             />
-            <a
-              className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/40 hover:text-white transition-colors"
-              href="/login"
-            >
-              ALREADY REGISTERED? <span className="font-bold">LOG IN</span>
-            </a>
           </div>
         </div>
       </div>
