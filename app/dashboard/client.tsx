@@ -10,6 +10,7 @@ import Link from "next/link";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import Chip from "@/components/ui/Chip";
 import Preloader from "@/components/ui/Preloader";
+import { getGreeting } from "@/lib/greeting";
 
 // Types
 type Profile = {
@@ -51,6 +52,8 @@ export default function DashboardClient() {
   const [isPageAnimationFinished, setIsPageAnimationFinished] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [greeting, setGreeting] = useState("");
+  const greetingPicked = useRef(false);
 
   useEffect(() => {
     if (!isPageAnimationFinished) return;
@@ -60,10 +63,24 @@ export default function DashboardClient() {
     return () => clearInterval(interval);
   }, [isPageAnimationFinished]);
 
+  useEffect(() => {
+    if (greetingPicked.current) return;
+
+    const name = profile?.name || user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split("@")[0];
+    if (name) {
+      setGreeting(getGreeting(name));
+      greetingPicked.current = true;
+    } else if (!isLoading) {
+      // Fallback if still no name after loading
+      setGreeting(getGreeting(null));
+      greetingPicked.current = true;
+    }
+  }, [profile, user, isLoading]);
+
   // Derived State
-  const greeting = getGreeting();
-  const displayName = profile?.name || user?.user_metadata?.full_name || user?.user_metadata?.name || "THERE";
-  const firstName = displayName.split(" ")[0];
+  const greetingParts = greeting.split(", ");
+  const phrase = greetingParts[0];
+  const nameWithDot = greetingParts[1];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -90,7 +107,7 @@ export default function DashboardClient() {
   }, [router]);
 
   useGSAP(() => {
-    if (isLoading || !containerRef.current) return;
+    if (isLoading || !containerRef.current || !greeting) return;
 
     const tl = gsap.timeline({ 
       defaults: { ease: "power4.out" },
@@ -285,23 +302,27 @@ export default function DashboardClient() {
       <main className="max-w-7xl mx-auto px-4 md:px-12 pt-32 md:pt-40">
         
         {/* Hero Greeting */}
-        <div className="anim-greeting mb-10 overflow-hidden">
-          <h1 className="font-headline font-black uppercase text-[clamp(2.5rem,6vw,6rem)] leading-[0.85] tracking-tighter text-white" style={{ perspective: "1000px" }}>
-            <span className="inline-block">
-              {`${greeting},`.split("").map((char, i) => (
-                <span key={`g-${i}`} className="greeting-char inline-block opacity-0" style={{ transformStyle: "preserve-3d" }}>
+        <div className="anim-greeting mb-10 overflow-visible">
+          <h1 className="font-headline font-black uppercase text-[clamp(2.5rem,6vw,5.5rem)] leading-[0.85] tracking-tighter text-white" style={{ perspective: "1000px" }}>
+            <span className="inline-block whitespace-nowrap">
+              {`${phrase}${nameWithDot ? "," : ""}`.split("").map((char, i) => (
+                <span key={`p-${i}`} className="greeting-char inline-block opacity-0" style={{ transformStyle: "preserve-3d" }}>
                   {char === " " ? "\u00A0" : char}
                 </span>
               ))}
             </span>
-            <br />
-            <span className="inline-block">
-              {`${firstName}.`.split("").map((char, i) => (
-                <span key={`n-${i}`} className="greeting-char inline-block opacity-0" style={{ transformStyle: "preserve-3d" }}>
-                  {char === " " ? "\u00A0" : char}
+            {nameWithDot && (
+              <>
+                <br />
+                <span className="inline-block whitespace-nowrap">
+                  {nameWithDot.split("").map((char, i) => (
+                    <span key={`n-${i}`} className="greeting-char inline-block opacity-0" style={{ transformStyle: "preserve-3d" }}>
+                      {char === " " ? "\u00A0" : char}
+                    </span>
+                  ))}
                 </span>
-              ))}
-            </span>
+              </>
+            )}
           </h1>
           <div className="anim-sub font-mono uppercase tracking-[0.2em] text-[15px] text-white/40 mt-4 opacity-0 flex items-center justify-center">
             YOUR NEXT REPLY STARTS&nbsp;
@@ -316,7 +337,7 @@ export default function DashboardClient() {
         </div>
 
         {/* Primary CTA */}
-        <div className="anim-cta mb-12 flex flex-wrap gap-4 md:gap-6">
+        <div className="anim-cta mb-12 flex flex-wrap gap-4 md:gap-6 justify-center">
           <PrimaryButton 
             title="New Cold Mail"
             subtitle="Personalise"
@@ -452,12 +473,7 @@ export default function DashboardClient() {
   );
 }
 
-function getGreeting() {
-  const hour = new Date().getHours();
-  if (hour < 12) return "GOOD MORNING";
-  if (hour < 18) return "GOOD AFTERNOON";
-  return "GOOD EVENING";
-}
+
 
 /** Ensures a URL has a protocol so it's treated as absolute, not a relative path. */
 function toAbsoluteUrl(url: string): string {
