@@ -255,7 +255,7 @@ export default function ResumeUploadPage() {
 
       {/* Bottom trust line */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 font-mono uppercase tracking-[0.2em] text-[15px] text-white/20 whitespace-nowrap select-none">
-        YOUR DATA IS NEVER SOLD. EVER.
+        YOUR RESUME IS DELETED AFTER PARSING.
       </div>
 
     </div>

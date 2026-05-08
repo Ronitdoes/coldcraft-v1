@@ -42,12 +42,12 @@ export default function ToggleGroup({
                   isActive
                     ? "bg-white text-black"
                     : "border border-white/10 text-white/40 group-hover:border-white/30 group-hover:text-white/60"
-                } font-mono text-[10px] uppercase tracking-[0.2em] px-4 py-2 transition-all duration-200 w-full text-left`}
+                } font-mono text-[10px] uppercase tracking-[0.2em] px-4 py-2 w-full text-left`}
               >
                 {option.label}
               </button>
               {option.description && (
-                <span className="font-mono text-[8px] text-white/20 opacity-0 group-hover:opacity-100 transition-opacity mt-1 tracking-widest pl-1">
+                <span className="font-mono text-[8px] text-white/20 opacity-0 group-hover:opacity-100 mt-1 tracking-widest pl-1">
                   {option.description}
                 </span>
               )}

@@ -18,7 +18,7 @@ const GoogleIcon = () => (
 export default function LoginPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const supabase = createClient();
+  const [supabase] = useState(() => createClient());
 
   useGSAP(() => {
     const tl = gsap.timeline({ defaults: { ease: "power4.out" } });

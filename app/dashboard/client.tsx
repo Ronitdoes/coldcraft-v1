@@ -12,11 +12,11 @@ import Chip from "@/components/ui/Chip";
 
 // Types
 type Profile = {
-  full_name: string;
+  name: string;
   college: string;
-  year_of_study: string;
-  github_url: string;
-  linkedin_url: string;
+  year: string;
+  github: string;
+  linkedin: string;
   skills: string[];
   projects: string[];
 };
@@ -60,7 +60,8 @@ export default function DashboardClient() {
 
   // Derived State
   const greeting = getGreeting();
-  const firstName = profile?.full_name?.split(" ")[0] || user?.user_metadata?.full_name?.split(" ")[0] || user?.user_metadata?.name?.split(" ")[0] || "THERE";
+  const displayName = profile?.name || user?.user_metadata?.full_name || user?.user_metadata?.name || "THERE";
+  const firstName = displayName.split(" ")[0];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -221,7 +222,7 @@ export default function DashboardClient() {
             )}
             <div className="flex flex-col items-start">
               <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/40 group-hover:text-white transition-colors">
-                {profile?.full_name?.split(" ")[0] || user?.email?.split("@")[0]}
+                {profile?.name || user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split("@")[0]}
               </span>
             </div>
             <svg 
@@ -238,10 +239,10 @@ export default function DashboardClient() {
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-1">
                   <span className="font-headline font-black uppercase text-xl tracking-tighter text-white">
-                    {profile?.full_name || "Anonymous User"}
+                    {profile?.name || user?.user_metadata?.full_name || user?.user_metadata?.name || "Anonymous User"}
                   </span>
                   <span className="font-mono uppercase tracking-[0.2em] text-[9px] text-white/40">
-                    {profile?.college && profile?.year_of_study ? `${profile.college} • ${profile.year_of_study}` : user?.email}
+                    {profile?.college && profile?.year ? `${profile.college} • ${profile.year}` : user?.email}
                   </span>
                 </div>
 
@@ -249,15 +250,15 @@ export default function DashboardClient() {
                   <>
                     <div className="flex flex-col gap-2">
                       <h3 className="font-headline uppercase tracking-widest text-[9px] font-bold text-on-surface-variant">SOCIALS</h3>
-                      <div className="flex flex-wrap gap-4">
-                        {profile.github_url && (
-                          <a href={profile.github_url} target="_blank" rel="noreferrer" className="font-mono text-[9px] text-white/40 hover:text-white transition-colors flex items-center gap-1 uppercase tracking-[0.15em]">
-                            GITHUB <span className="text-white/20">&nearr;</span>
+                      <div className="flex flex-wrap gap-2">
+                        {profile.github && (
+                          <a href={toAbsoluteUrl(profile.github)} target="_blank" rel="noreferrer" className="block hover:opacity-80 transition-opacity">
+                            <Chip label="GITHUB" size="sm" className="border-white/5 text-white/30" />
                           </a>
                         )}
-                        {profile.linkedin_url && (
-                          <a href={profile.linkedin_url} target="_blank" rel="noreferrer" className="font-mono text-[9px] text-white/40 hover:text-white transition-colors flex items-center gap-1 uppercase tracking-[0.15em]">
-                            LINKEDIN <span className="text-white/20">&nearr;</span>
+                        {profile.linkedin && (
+                          <a href={toAbsoluteUrl(profile.linkedin)} target="_blank" rel="noreferrer" className="block hover:opacity-80 transition-opacity">
+                            <Chip label="LINKEDIN" size="sm" className="border-white/5 text-white/30" />
                           </a>
                         )}
                       </div>
@@ -276,7 +277,14 @@ export default function DashboardClient() {
                   </>
                 )}
 
-                <div className="pt-4 border-t border-white/5">
+                <div className="pt-4 border-t border-white/5 flex flex-col gap-3">
+                  <button
+                    onClick={() => { router.push("/profile/edit"); setShowProfileDropdown(false); }}
+                    className="w-full text-left font-headline uppercase tracking-widest text-[10px] font-bold text-on-surface-variant hover:text-white transition-colors flex items-center justify-between group"
+                  >
+                    <span>EDIT PROFILE</span>
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                  </button>
                   <button 
                     onClick={handleSignOut}
                     className="w-full text-left font-headline uppercase tracking-widest text-[10px] font-bold text-on-surface-variant hover:text-red-500 transition-colors flex items-center justify-between group"
@@ -429,4 +437,11 @@ function getGreeting() {
   if (hour < 12) return "GOOD MORNING";
   if (hour < 18) return "GOOD AFTERNOON";
   return "GOOD EVENING";
+}
+
+/** Ensures a URL has a protocol so it's treated as absolute, not a relative path. */
+function toAbsoluteUrl(url: string): string {
+  if (!url) return "#";
+  if (/^https?:\/\//i.test(url)) return url;
+  return `https://${url}`;
 }

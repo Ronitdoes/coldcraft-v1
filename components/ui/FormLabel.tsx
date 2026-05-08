@@ -9,7 +9,7 @@ export default function FormLabel({ children, className = "", rightText }: FormL
   if (rightText) {
     return (
       <div className={`flex justify-between items-end mb-1 ${className}`}>
-        <label className="block font-mono uppercase tracking-[0.25em] text-[11px] md:text-xs text-white/40">
+        <label className="block font-headline font-bold uppercase tracking-widest text-[11px] md:text-xs text-on-surface-variant">
           {children}
         </label>
         <span className="font-mono text-[9px] md:text-[10px] text-white/20 uppercase tracking-[0.15em]">
@@ -20,7 +20,7 @@ export default function FormLabel({ children, className = "", rightText }: FormL
   }
 
   return (
-    <label className={`block font-mono uppercase tracking-[0.25em] text-[11px] md:text-xs text-white/40 mb-1 ${className}`}>
+    <label className={`block font-headline font-bold uppercase tracking-widest text-[11px] md:text-xs text-on-surface-variant mb-1 ${className}`}>
       {children}
     </label>
   );

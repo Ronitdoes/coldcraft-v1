@@ -8,7 +8,7 @@ interface ChipProps {
 
 export default function Chip({ label, onRemove, size = "md", className = "" }: ChipProps) {
   const sizeClasses = size === "sm"
-    ? "text-[8px] px-2 py-0.5"
+    ? "text-[10px] px-3 py-1"
     : "text-[11px] md:text-xs px-4 py-1.5";
 
   return (

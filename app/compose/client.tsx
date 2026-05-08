@@ -7,6 +7,7 @@ import { gsap, useGSAP } from "@/lib/gsap";
 import FormInput from "@/components/ui/FormInput";
 import FormLabel from "@/components/ui/FormLabel";
 import ToggleGroup from "@/components/ui/ToggleGroup";
+import PrimaryButton from "@/components/ui/PrimaryButton";
 
 type Profile = {
   name?: string;
@@ -236,20 +237,11 @@ export default function ComposeClient({ profile }: { profile: Profile | null }) 
           </div>
         </div>
 
-        <div className="mt-2">
-          <button
-            onClick={handleGenerate}
-            disabled={!inputs.recipient || !inputs.company || !inputs.role || loading}
-            className="w-full bg-white text-black font-headline font-black uppercase tracking-tighter px-8 py-6 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
-          >
-            {loading ? "GENERATING..." : "GENERATE NOW →"}
-          </button>
-          {error && (
-            <p className="font-mono uppercase tracking-[0.2em] text-[10px] text-red-500/80 mt-3">
-              {error}
-            </p>
-          )}
-        </div>
+        {error && (
+          <p className="font-mono uppercase tracking-[0.2em] text-[10px] text-red-500/80 mt-3">
+            {error}
+          </p>
+        )}
       </div>
 
       {/* RIGHT COLUMN */}
@@ -295,7 +287,7 @@ export default function ComposeClient({ profile }: { profile: Profile | null }) 
         {screen === "generated" && (
           <div className="flex flex-col gap-6">
             <div>
-              <p className="font-mono uppercase tracking-[0.2em] text-[10px] text-white/30 mb-2">
+              <p className="font-headline font-bold uppercase tracking-widest text-[11px] md:text-xs text-on-surface-variant mb-2">
                 SUBJECT
               </p>
               <div className="border-t border-white/10 pt-4">
@@ -306,7 +298,7 @@ export default function ComposeClient({ profile }: { profile: Profile | null }) 
             </div>
 
             <div>
-              <p className="font-mono uppercase tracking-[0.2em] text-[10px] text-white/30 mb-2">
+              <p className="font-headline font-bold uppercase tracking-widest text-[11px] md:text-xs text-on-surface-variant mb-2">
                 MAIL BODY
               </p>
               <div className="border-t border-white/10 pt-4">
@@ -325,19 +317,28 @@ export default function ComposeClient({ profile }: { profile: Profile | null }) 
               </button>
               <button 
                 onClick={handleGmailOpen}
-                className="font-mono uppercase tracking-[0.2em] text-[10px] border border-white/10 px-4 py-2 text-white/40 hover:border-white/40 hover:text-white transition-colors duration-200"
+                className="font-mono uppercase tracking-[0.2em] text-[10px] border border-white/10 px-4 py-2 text-white/40 hover:border-white/40 hover:text-white transition-colors duration-200 flex items-center gap-2"
               >
+                <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M24 4.5v15c0 .85-.65 1.5-1.5 1.5H21V7.387l-9 6.463-9-6.463V21H1.5C.65 21 0 20.35 0 19.5v-15c0-.425.162-.8.431-1.068C.7 3.16 1.075 3 1.5 3H2l10 7.188L22 3h.5c.425 0 .8.162 1.068.432.27.268.432.643.432 1.068z" fill="currentColor"/>
+                </svg>
                 OPEN IN GMAIL
-              </button>
-              <button 
-                onClick={handleGenerate}
-                className="font-mono uppercase tracking-[0.2em] text-[10px] border border-white/10 px-4 py-2 text-white/40 hover:border-white/40 hover:text-white transition-colors duration-200 ml-auto"
-              >
-                REGENERATE
               </button>
             </div>
           </div>
         )}
+
+        <div className="w-full mt-8">
+          <PrimaryButton
+            title={loading ? "GENERATING..." : screen === "generated" ? "REGENERATE" : "GENERATE NOW"}
+            subtitle={screen === "generated" ? "TRY A DIFFERENT VERSION" : "CRAFT YOUR COLD MAIL"}
+            onClick={handleGenerate}
+            loading={loading}
+            disabled={!inputs.recipient || !inputs.company || !inputs.role}
+            variant="flat"
+            className="w-full"
+          />
+        </div>
       </div>
     </div>
   );
