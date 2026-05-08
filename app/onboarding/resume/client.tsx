@@ -124,18 +124,18 @@ export default function ResumeUploadPage() {
   };
 
   return (
-    <div ref={containerRef} className="h-screen w-screen bg-black overflow-hidden relative flex flex-col items-center perspective-[1200px]">
+    <div ref={containerRef} className="min-h-[100dvh] w-full bg-black overflow-x-hidden relative flex flex-col items-center perspective-[1200px] pb-24 md:pb-0">
       
       {/* Top Logo */}
       <BrandHeader className="absolute top-8 left-8 z-20" />
 
       {/* Step Indicator (Top Center) */}
-      <div className="anim-step absolute top-24 md:top-10 left-1/2 -translate-x-1/2">
+      <div className="anim-step absolute top-20 md:top-10 left-1/2 -translate-x-1/2 z-20">
         <StepIndicator currentStep={1} totalSteps={2} label="UPLOAD RESUME" />
       </div>
 
       {/* Main Content Container */}
-      <div className="w-full max-w-6xl px-4 md:px-12 flex flex-col justify-center items-center h-full">
+      <div className="w-full max-w-6xl px-4 md:px-12 flex flex-col justify-center items-center min-h-[100dvh] pt-32 md:pt-0">
         
         {/* Split Layout Grid */}
         <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
@@ -143,7 +143,7 @@ export default function ResumeUploadPage() {
           {/* Left Column: 01 + Heading */}
           <div className="flex flex-col items-start justify-center">
             <div className="anim-number" style={{ transformStyle: "preserve-3d" }}>
-              <h1 className="font-headline font-black text-[clamp(6rem,16vw,16rem)] leading-[0.8] tracking-tighter text-white m-0 p-0 block select-none">
+              <h1 className="font-headline font-black text-[clamp(4rem,16vw,16rem)] leading-[0.8] tracking-tighter text-white m-0 p-0 block select-none">
                 01
               </h1>
             </div>
@@ -254,7 +254,7 @@ export default function ResumeUploadPage() {
       </div>
 
       {/* Bottom trust line */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 font-mono uppercase tracking-[0.2em] text-[15px] text-white/20 whitespace-nowrap select-none">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 font-mono uppercase tracking-[0.2em] text-[10px] md:text-[15px] text-white/20 whitespace-nowrap select-none">
         YOUR RESUME IS DELETED AFTER PARSING.
       </div>
 

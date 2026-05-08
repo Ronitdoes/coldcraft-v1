@@ -26,7 +26,9 @@ export default function ToggleGroup({
   columns,
   hint,
 }: ToggleGroupProps) {
-  const gridClass = columns ? `grid grid-cols-${columns} gap-2` : "flex gap-2";
+  const gridClass = columns 
+    ? `grid grid-cols-1 ${columns === 2 ? 'sm:grid-cols-2' : columns === 3 ? 'sm:grid-cols-3' : `md:grid-cols-${columns}`} gap-2` 
+    : "flex flex-wrap gap-2";
 
   return (
     <div>

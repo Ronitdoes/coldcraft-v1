@@ -147,16 +147,16 @@ export default function ComposeClient({ profile }: { profile: Profile | null }) 
   };
 
   return (
-    <div ref={containerRef} className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
+    <div ref={containerRef} className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-start pb-20">
       
       {/* LEFT COLUMN */}
       <div className="anim-left flex flex-col gap-6 w-full">
         {isIncompleteProfile && (
-          <div className="border-l-2 border-white/20 pl-4 py-2 mb-2 flex items-center justify-between">
-            <span className="font-mono uppercase tracking-[0.2em] text-[10px] text-white/30">
+          <div className="border-l-2 border-white/20 pl-4 py-2 mb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <span className="font-mono uppercase tracking-[0.2em] text-[9px] md:text-[10px] text-white/30">
               ⚠ YOUR PROFILE IS INCOMPLETE — MAILS MAY BE LESS PERSONALIZED
             </span>
-            <Link href="/onboarding/profile" className="font-mono uppercase tracking-[0.2em] text-[10px] text-white hover:text-white/70 transition-colors ml-4 whitespace-nowrap">
+            <Link href="/onboarding/profile" className="font-mono uppercase tracking-[0.2em] text-[9px] md:text-[10px] text-white hover:text-white/70 transition-colors sm:ml-4 whitespace-nowrap">
               EDIT PROFILE →
             </Link>
           </div>
@@ -245,9 +245,9 @@ export default function ComposeClient({ profile }: { profile: Profile | null }) 
       </div>
 
       {/* RIGHT COLUMN */}
-      <div className="anim-right flex flex-col w-full sticky top-24">
+      <div className="anim-right flex flex-col w-full md:sticky md:top-24 mt-8 md:mt-0">
         {profile && (
-          <p className="font-mono uppercase tracking-[0.2em] text-[10px] text-white/20 mb-6">
+          <p className="font-mono uppercase tracking-[0.2em] text-[9px] md:text-[10px] text-white/20 mb-6">
             GENERATING AS: {profile.name} · {profile.college} · GITHUB.COM/{profile.github?.split('/').pop()}
           </p>
         )}

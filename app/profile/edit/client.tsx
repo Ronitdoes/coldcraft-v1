@@ -206,7 +206,7 @@ export default function EditProfileClient() {
   }
 
   return (
-    <div ref={containerRef} className="h-[100dvh] w-full bg-black overflow-hidden relative perspective-[1200px]">
+    <div ref={containerRef} className="min-h-[100dvh] w-full bg-black overflow-x-hidden relative perspective-[1200px] pb-24 md:pb-0">
 
       {/* Top Left Logo */}
       <BrandHeader href="/dashboard" className="absolute top-8 left-8 z-20" />
@@ -214,7 +214,7 @@ export default function EditProfileClient() {
       {/* Back link */}
       <button
         onClick={() => router.push("/dashboard")}
-        className="absolute top-9 right-8 z-20 font-mono text-[10px] uppercase tracking-[0.2em] text-white/30 hover:text-white transition-colors"
+        className="absolute top-8 md:top-9 right-8 z-20 font-mono text-[10px] uppercase tracking-[0.2em] text-white/30 hover:text-white transition-colors"
       >
         ← BACK
       </button>
@@ -225,7 +225,7 @@ export default function EditProfileClient() {
         {/* LEFT STATIC PANEL */}
         <div className="h-full flex-col items-start justify-center px-6 md:px-12 hidden md:flex relative">
           <div className="anim-number" style={{ transformStyle: "preserve-3d" }}>
-            <h1 className="font-headline font-black text-[clamp(6rem,16vw,16rem)] leading-[0.8] tracking-tighter text-white m-0 p-0 block select-none">
+            <h1 className="font-headline font-black text-[clamp(4rem,16vw,16rem)] leading-[0.8] tracking-tighter text-white m-0 p-0 block select-none">
               EP
             </h1>
           </div>

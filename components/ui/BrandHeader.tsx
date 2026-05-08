@@ -11,10 +11,10 @@ export default function BrandHeader({ href = "/", className = "" }: BrandHeaderP
   return (
     <Link
       href={href}
-      className={`flex items-center gap-3 hover:opacity-80 transition-opacity ${className}`}
+      className={`flex items-center gap-2 md:gap-3 hover:opacity-80 transition-opacity ${className}`}
     >
-      <Logo className="w-8 h-8 md:w-10 md:h-10 text-white" />
-      <span className="text-xl md:text-2xl font-bold tracking-tighter font-headline text-white">
+      <Logo className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 text-white" />
+      <span className="text-base sm:text-xl md:text-2xl font-bold tracking-tighter font-headline text-white whitespace-nowrap">
         C O L D C R A F T
       </span>
     </Link>

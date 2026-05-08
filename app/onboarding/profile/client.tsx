@@ -167,7 +167,7 @@ export default function ProfileReviewPage() {
       <BrandHeader className="absolute top-8 left-8 z-20" />
 
       {/* Step Indicator */}
-      <div className="absolute top-24 md:top-10 left-1/2 -translate-x-1/2 z-20">
+      <div className="absolute top-20 md:top-10 left-1/2 -translate-x-1/2 z-20">
         <StepIndicator currentStep={2} totalSteps={2} label="REVIEW YOUR PROFILE" />
       </div>
 
@@ -177,7 +177,7 @@ export default function ProfileReviewPage() {
         {/* LEFT STATIC PANEL */}
         <div className="h-full flex-col items-start justify-center px-6 md:px-12 hidden md:flex relative">
           <div className="anim-number" style={{ transformStyle: 'preserve-3d' }}>
-            <h1 className="font-headline font-black text-[clamp(6rem,16vw,16rem)] leading-[0.8] tracking-tighter text-white m-0 p-0 block select-none">
+            <h1 className="font-headline font-black text-[clamp(4rem,16vw,16rem)] leading-[0.8] tracking-tighter text-white m-0 p-0 block select-none">
               02
             </h1>
           </div>

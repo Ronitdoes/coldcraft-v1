@@ -49,6 +49,7 @@ export default function DashboardClient() {
   const [toggleWord, setToggleWord] = useState(false);
   const [isPageAnimationFinished, setIsPageAnimationFinished] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isPageAnimationFinished) return;
@@ -149,6 +150,29 @@ export default function DashboardClient() {
     router.push(`/compose?${params.toString()}`);
   };
 
+  const handleDelete = (id: string) => {
+    setDeleteConfirmId(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteConfirmId) return;
+
+    const supabase = createClient();
+    const { error } = await supabase
+      .from('mail_history')
+      .delete()
+      .eq('id', deleteConfirmId);
+
+    if (error) {
+      console.error("Error deleting mail:", error);
+      alert("FAILED TO DELETE MAIL. PLEASE TRY AGAIN.");
+    } else {
+      setMailHistory(prev => prev.filter(mail => mail.id !== deleteConfirmId));
+    }
+    
+    setDeleteConfirmId(null);
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-black w-full overflow-x-hidden">
@@ -203,13 +227,13 @@ export default function DashboardClient() {
   }
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-black text-white pb-24">
+    <div ref={containerRef} className="min-h-screen bg-black text-white pb-24 overflow-x-hidden">
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-black border-b border-white/5 px-8 pt-8 pb-4 flex items-center justify-between">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-black border-b border-white/5 px-4 md:px-8 pt-6 md:pt-8 pb-4 flex items-center justify-between">
         <BrandHeader />
         <div className="flex items-center gap-4 relative">
           <div 
-            className="flex items-center gap-3 cursor-pointer group px-3 py-1.5 hover:bg-white/5 transition-colors border border-transparent hover:border-white/10"
+            className="flex items-center gap-2 sm:gap-3 cursor-pointer group px-2 sm:px-3 py-1.5 hover:bg-white/5 transition-colors border border-transparent hover:border-white/10"
             onClick={() => setShowProfileDropdown(!showProfileDropdown)}
           >
             {user?.user_metadata?.avatar_url && (
@@ -220,8 +244,8 @@ export default function DashboardClient() {
                 referrerPolicy="no-referrer"
               />
             )}
-            <div className="flex flex-col items-start">
-              <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/40 group-hover:text-white transition-colors">
+            <div className="flex flex-col items-start hidden sm:block">
+              <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/40 group-hover:text-white transition-colors truncate max-w-[120px]">
                 {profile?.name || user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split("@")[0]}
               </span>
             </div>
@@ -235,7 +259,7 @@ export default function DashboardClient() {
 
           {/* Profile Dropdown */}
           {showProfileDropdown && (
-            <div className="absolute top-full right-0 mt-4 w-72 bg-[#0A0A0A] border border-white/10 p-6 z-[100] shadow-2xl animate-in fade-in slide-in-from-top-2 duration-300">
+            <div className="absolute top-full right-0 mt-4 w-[calc(100vw-2rem)] md:w-72 bg-[#0A0A0A] border border-white/10 p-6 z-[100] shadow-2xl animate-in fade-in slide-in-from-top-2 duration-300">
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-1">
                   <span className="font-headline font-black uppercase text-xl tracking-tighter text-white">
@@ -390,16 +414,22 @@ export default function DashboardClient() {
                             </span>
                           </div>
                         </div>
-                        <div className="flex items-center gap-6">
+                        <div className="flex items-center gap-4 md:gap-6">
                           <button 
                             onClick={() => toggleExpand(mail.id)}
-                            className="font-mono text-[10px] uppercase tracking-[0.15em] text-white/30 hover:text-white transition-colors"
+                            className="font-mono text-[9px] md:text-[10px] uppercase tracking-[0.15em] text-white/30 hover:text-white transition-colors"
                           >
                             {isExpanded ? 'CLOSE' : 'VIEW'}
                           </button>
                           <button 
+                            onClick={() => handleDelete(mail.id)}
+                            className="font-mono text-[9px] md:text-[10px] uppercase tracking-[0.15em] text-white/30 hover:text-red-500 transition-colors"
+                          >
+                            DELETE
+                          </button>
+                          <button 
                             onClick={() => handleResend(mail)}
-                            className="font-mono text-[10px] uppercase tracking-[0.15em] text-white/30 hover:text-white transition-colors"
+                            className="font-mono text-[9px] md:text-[10px] uppercase tracking-[0.15em] text-white/30 hover:text-white transition-colors"
                           >
                             RESEND
                           </button>
@@ -428,6 +458,37 @@ export default function DashboardClient() {
 
         </div>
       </main>
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirmId && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-300">
+          <div className="bg-[#0A0A0A] border border-white/10 p-8 max-w-md w-full flex flex-col gap-8 shadow-2xl animate-in zoom-in-95 duration-300">
+            <div className="flex flex-col gap-2 text-center">
+              <h3 className="font-headline font-black uppercase text-2xl tracking-tighter text-white">
+                CONFIRM DELETION
+              </h3>
+              <p className="font-mono uppercase tracking-[0.2em] text-[10px] text-white/40 leading-loose">
+                ARE YOU SURE YOU WANT TO DELETE THIS MAIL?<br/>
+                THIS ACTION CANNOT BE UNDONE.
+              </p>
+            </div>
+            <div className="flex flex-col gap-3">
+              <button 
+                onClick={confirmDelete}
+                className="w-full bg-white text-black font-headline font-bold uppercase tracking-widest text-xs py-4 hover:bg-red-500 hover:text-white transition-colors"
+              >
+                DELETE PERMANENTLY
+              </button>
+              <button 
+                onClick={() => setDeleteConfirmId(null)}
+                className="w-full border border-white/10 text-white font-headline font-bold uppercase tracking-widest text-xs py-4 hover:bg-white/5 transition-colors"
+              >
+                CANCEL
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
