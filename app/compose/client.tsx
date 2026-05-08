@@ -8,6 +8,7 @@ import FormInput from "@/components/ui/FormInput";
 import FormLabel from "@/components/ui/FormLabel";
 import ToggleGroup from "@/components/ui/ToggleGroup";
 import PrimaryButton from "@/components/ui/PrimaryButton";
+import Preloader from "@/components/ui/Preloader";
 
 type Profile = {
   name?: string;
@@ -268,19 +269,8 @@ export default function ComposeClient({ profile }: { profile: Profile | null }) 
         )}
 
         {screen === "loading" && (
-          <div className="border border-dashed border-white/10 p-12 min-h-[400px] flex flex-col items-center justify-center gap-6">
-            <div className="flex gap-2">
-              {[0, 300, 600].map((delay, i) => (
-                <div
-                  key={i}
-                  className="w-2 h-2 bg-white rounded-full animate-bounce"
-                  style={{ animationDelay: `${delay}ms` }}
-                />
-              ))}
-            </div>
-            <p className="font-mono uppercase tracking-[0.2em] text-[10px] text-white/60 transition-opacity duration-300 min-h-[16px]">
-              {loadingTexts[loadingTextIndex]}
-            </p>
+          <div className="border border-dashed border-white/10 p-12 min-h-[400px] flex flex-col items-center justify-center">
+            <Preloader fullScreen={false} message={loadingTexts[loadingTextIndex]} />
           </div>
         )}
 

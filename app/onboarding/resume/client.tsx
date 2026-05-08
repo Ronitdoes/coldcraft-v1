@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import BrandHeader from "@/components/ui/BrandHeader";
 import StepIndicator from "@/components/ui/StepIndicator";
+import Preloader from "@/components/ui/Preloader";
 
 const LOADING_TEXTS = [
   "READING YOUR RESUME...",
@@ -184,24 +185,7 @@ export default function ResumeUploadPage() {
                   />
 
                   {isUploading ? (
-                    // Loading State
-                    <div className="flex flex-col items-center justify-center w-full select-none">
-                      <div className="flex gap-3 mb-8">
-                        <div className="w-[8px] h-[8px] bg-white rounded-full animate-pulse" style={{ animationDelay: '0ms' }} />
-                        <div className="w-[8px] h-[8px] bg-white rounded-full animate-pulse" style={{ animationDelay: '300ms' }} />
-                        <div className="w-[8px] h-[8px] bg-white rounded-full animate-pulse" style={{ animationDelay: '600ms' }} />
-                      </div>
-                      <div className="h-4 relative w-full flex justify-center items-center">
-                        {LOADING_TEXTS.map((text, i) => (
-                          <div 
-                            key={i} 
-                            className={`absolute font-mono uppercase tracking-[0.2em] text-xs text-white/60 transition-opacity duration-500 ${loadingStep === i ? 'opacity-100' : 'opacity-0'}`}
-                          >
-                            {text}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+                    <Preloader fullScreen={false} message={LOADING_TEXTS[loadingStep]} />
                   ) : selectedFile ? (
                     // Selected File State
                     <div className="flex items-center gap-6 w-full px-4 py-4">

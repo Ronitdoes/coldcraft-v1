@@ -9,6 +9,7 @@ import TextRollover from "@/components/TextRollover";
 import Link from "next/link";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import Chip from "@/components/ui/Chip";
+import Preloader from "@/components/ui/Preloader";
 
 // Types
 type Profile = {
@@ -174,56 +175,7 @@ export default function DashboardClient() {
   };
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-black w-full overflow-x-hidden">
-        {/* Nav Skeleton (Full Width) */}
-        <div className="fixed top-0 left-0 right-0 h-24 bg-black border-b border-white/5 flex items-center justify-between px-8 z-[60]">
-          <div className="w-32 h-6 bg-white/[0.08] animate-pulse" />
-          <div className="flex gap-4">
-            <div className="w-8 h-8 rounded-full bg-white/[0.08] animate-pulse" />
-            <div className="w-24 h-6 bg-white/[0.08] animate-pulse" />
-          </div>
-        </div>
-
-        {/* Content Skeleton (Centered like real content) */}
-        <div className="max-w-7xl mx-auto px-4 md:px-12 pt-32 md:pt-40 w-full flex flex-col">
-          {/* Greeting Skeleton */}
-          <div className="mb-10 space-y-4">
-            <div className="w-[60%] h-16 bg-white/[0.08] animate-pulse" />
-            <div className="w-[40%] h-16 bg-white/[0.08] animate-pulse" />
-            <div className="w-[30%] h-4 bg-white/[0.08] animate-pulse mt-4" />
-          </div>
-
-          {/* CTA Skeleton */}
-          <div className="mb-12 flex flex-wrap gap-4">
-            <div className="w-56 h-16 bg-white/[0.08] animate-pulse" />
-            <div className="w-56 h-16 bg-white/[0.08] animate-pulse" />
-          </div>
-
-          {/* Stats Skeleton */}
-          <div className="flex gap-16 border-t border-b border-white/5 py-8 mb-16">
-            <div className="space-y-2">
-              <div className="w-16 h-12 bg-white/[0.08] animate-pulse" />
-              <div className="w-32 h-3 bg-white/[0.08] animate-pulse" />
-            </div>
-            <div className="space-y-2">
-              <div className="w-16 h-12 bg-white/[0.08] animate-pulse" />
-              <div className="w-32 h-3 bg-white/[0.08] animate-pulse" />
-            </div>
-          </div>
-
-          {/* Grid Skeleton */}
-          <div className="w-full space-y-4">
-            <div className="w-48 h-6 bg-white/[0.08] animate-pulse mb-6" />
-            <div className="space-y-3">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="w-full h-24 border border-white/5 bg-white/[0.03] animate-pulse" />
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <Preloader message="SYNCING" />;
   }
 
   return (
@@ -233,7 +185,7 @@ export default function DashboardClient() {
         <BrandHeader />
         <div className="flex items-center gap-4 relative">
           <div 
-            className="flex items-center gap-2 sm:gap-3 cursor-pointer group px-2 sm:px-3 py-1.5 hover:bg-white/5 transition-colors border border-transparent hover:border-white/10"
+            className="flex items-center gap-2 sm:gap-3 cursor-pointer group px-2 sm:px-3 py-1.5 hover:bg-white/5 transition-colors border border-transparent hover:border-white/10 select-none"
             onClick={() => setShowProfileDropdown(!showProfileDropdown)}
           >
             {user?.user_metadata?.avatar_url && (
@@ -259,15 +211,22 @@ export default function DashboardClient() {
 
           {/* Profile Dropdown */}
           {showProfileDropdown && (
-            <div className="absolute top-full right-0 mt-4 w-[calc(100vw-2rem)] md:w-72 bg-[#0A0A0A] border border-white/10 p-6 z-[100] shadow-2xl animate-in fade-in slide-in-from-top-2 duration-300">
+            <div className="absolute top-full right-0 mt-4 w-[calc(100vw-2rem)] md:w-72 bg-[#0A0A0A] border border-white/10 p-6 z-[100] shadow-2xl animate-in fade-in slide-in-from-top-2 duration-300 select-none">
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-1">
                   <span className="font-headline font-black uppercase text-xl tracking-tighter text-white">
                     {profile?.name || user?.user_metadata?.full_name || user?.user_metadata?.name || "Anonymous User"}
                   </span>
-                  <span className="font-mono uppercase tracking-[0.2em] text-[9px] text-white/40">
-                    {profile?.college && profile?.year ? `${profile.college} • ${profile.year}` : user?.email}
-                  </span>
+                  <div className="flex flex-col font-mono uppercase tracking-[0.2em] text-[9px] text-white/40 leading-relaxed">
+                    {profile?.college ? (
+                      <>
+                        <span>{profile.college}</span>
+                        {profile.year && <span>{profile.year}</span>}
+                      </>
+                    ) : (
+                      <span>{user?.email}</span>
+                    )}
+                  </div>
                 </div>
 
                 {profile && (
@@ -301,17 +260,17 @@ export default function DashboardClient() {
                   </>
                 )}
 
-                <div className="pt-4 border-t border-white/5 flex flex-col gap-3">
+                <div className="pt-4 border-t border-white/5 flex flex-col gap-4">
                   <button
                     onClick={() => { router.push("/profile/edit"); setShowProfileDropdown(false); }}
-                    className="w-full text-left font-headline uppercase tracking-widest text-[10px] font-bold text-on-surface-variant hover:text-white transition-colors flex items-center justify-between group"
+                    className="w-full text-left font-headline uppercase tracking-widest text-[13px] font-bold text-on-surface-variant hover:text-white transition-colors flex items-center justify-between group"
                   >
                     <span>EDIT PROFILE</span>
                     <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                   </button>
                   <button 
                     onClick={handleSignOut}
-                    className="w-full text-left font-headline uppercase tracking-widest text-[10px] font-bold text-on-surface-variant hover:text-red-500 transition-colors flex items-center justify-between group"
+                    className="w-full text-left font-headline uppercase tracking-widest text-[13px] font-bold text-on-surface-variant hover:text-red-500 transition-colors flex items-center justify-between group"
                   >
                     <span>LOG OUT</span>
                     <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
