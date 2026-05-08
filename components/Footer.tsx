@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
+import Logo from "@/components/Logo";
 import TextRollover from "@/components/TextRollover";
 
 export default function Footer() {
@@ -27,9 +28,12 @@ export default function Footer() {
   ];
 
   return (
-    <footer ref={container} className="w-full px-8 md:px-12 py-16 md:py-24 flex flex-col md:flex-row justify-between items-start gap-8 bg-background text-on-background font-body text-xs tracking-widest uppercase relative z-20 border-t border-outline-variant">
+    <footer ref={container} className="w-full px-8 md:px-12 py-16 md:py-24 flex flex-col md:flex-row justify-between items-start gap-8 bg-background text-on-background font-body text-xs tracking-widest uppercase relative z-20 border-t border-outline-variant overflow-hidden">
       <div className="flex flex-col gap-8 flex-1 max-w-sm">
-        <div className="text-lg font-bold text-on-background font-headline">COLDCRAFT</div>
+        <div className="flex items-center gap-3">
+          <Logo className="w-8 h-8 text-on-background" />
+          <div className="text-lg font-bold text-on-background font-headline">COLDCRAFT</div>
+        </div>
         <p className="opacity-50 font-body uppercase leading-relaxed">
           An AI cold mail tool built for MUJ students by a MUJ student.
         </p>
@@ -67,6 +71,13 @@ export default function Footer() {
             </a>
           ))}
         </div>
+      </div>
+
+      {/* Massive Background Branding */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-screen overflow-hidden pointer-events-none select-none z-[-1] leading-none flex justify-center">
+        <span className="font-headline font-black text-[22vw] text-white/[0.03] tracking-tighter block whitespace-nowrap -mb-[0.15em] translate-y-[10%] uppercase">
+          COLDCRAFT
+        </span>
       </div>
     </footer>
   );

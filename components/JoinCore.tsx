@@ -1,12 +1,36 @@
 "use client";
 
 import { useRef } from "react";
+import { useRouter } from "next/navigation";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import TextRollover from "@/components/TextRollover";
+import { useAuth } from "@/hooks/useAuth";
+import { createClient } from "@/utils/supabase/client";
 
 export default function JoinCore() {
   const container = useRef<HTMLElement>(null);
+  const router = useRouter();
+  const { user } = useAuth();
+
+  const handleCTA = async () => {
+    if (user) {
+      const supabase = createClient();
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', user.id)
+        .single();
+
+      if (profile) {
+        router.push("/dashboard");
+      } else {
+        router.push("/onboarding/resume");
+      }
+    } else {
+      router.push("/login");
+    }
+  };
 
   useGSAP(() => {
     gsap.fromTo(".core-bg-text",
@@ -33,14 +57,11 @@ export default function JoinCore() {
           YOUR NEXT REPLY IS ONE MAIL AWAY
         </p>
 
-        <PrimaryButton title="Write my cold mail" subtitle="Internship / Full-time" />
-
-        <a
-          className="mt-6 md:mt-8 font-mono text-[10px] tracking-[0.2em] uppercase text-white/40 hover:text-white transition-colors"
-          href="#"
-        >
-          ALREADY HAVE AN ACCOUNT? <span className="font-bold">LOG IN</span>
-        </a>
+        <PrimaryButton 
+          title="Write my cold mail" 
+          subtitle="Internship / Full-time" 
+          onClick={handleCTA}
+        />
       </div>
     </section>
   );
