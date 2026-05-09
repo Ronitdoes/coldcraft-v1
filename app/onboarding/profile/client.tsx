@@ -123,12 +123,16 @@ export default function ProfileReviewPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen-stable w-full bg-black overflow-x-hidden relative">
-        <BrandHeader className="absolute top-8 left-8 z-20" />
-        <div className="absolute top-24 md:top-10 left-1/2 -translate-x-1/2">
-          <StepIndicator currentStep={2} totalSteps={2} label="REVIEW YOUR PROFILE" />
+        {/* Top Navbar Skeleton */}
+        <div className="fixed top-0 left-0 right-0 h-20 md:h-24 bg-black/60 backdrop-blur-md z-40 border-b border-white/5 flex items-center justify-between px-6 md:px-12">
+          <BrandHeader className="flex-shrink-0" />
+          <div className="anim-step static md:absolute md:left-1/2 md:-translate-x-1/2">
+            <StepIndicator currentStep={2} totalSteps={2} label="REVIEW YOUR PROFILE" />
+          </div>
+          <div className="hidden md:block w-32"></div>
         </div>
         
-        <div className="w-full max-w-6xl px-4 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center min-h-screen-stable pt-32 pb-24 md:py-24 mx-auto">
+        <div className="w-full max-w-6xl px-4 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center min-h-screen-stable pt-24 md:pt-32 pb-24 md:py-24 mx-auto">
           {/* Left Column Skeleton */}
           <div className="flex flex-col items-start justify-center pt-16 md:pt-0">
             <div className="w-32 h-32 md:w-48 md:h-48 bg-white/[0.03] animate-pulse mb-6" />
@@ -164,13 +168,15 @@ export default function ProfileReviewPage() {
     <div ref={containerRef} className="h-screen-stable w-full bg-black overflow-hidden relative perspective-[1200px]">
 
       {/* Top Navbar */}
-      <div className="fixed top-0 left-0 right-0 h-20 md:h-24 bg-black/60 backdrop-blur-md z-40 border-b border-white/5 flex items-center px-6 md:px-12">
-        <BrandHeader />
-      </div>
+      <div className="fixed top-0 left-0 right-0 h-20 md:h-24 bg-black/60 backdrop-blur-md z-40 border-b border-white/5 flex items-center justify-between px-6 md:px-12">
+        <BrandHeader className="flex-shrink-0" />
+        
+        {/* Step Indicator (Desktop: Center, Mobile: Right-ish) */}
+        <div className="anim-step static md:absolute md:left-1/2 md:-translate-x-1/2">
+          <StepIndicator currentStep={2} totalSteps={2} label="REVIEW YOUR PROFILE" />
+        </div>
 
-      {/* Step Indicator */}
-      <div className="fixed top-6 md:top-8 left-1/2 -translate-x-1/2 z-50">
-        <StepIndicator currentStep={2} totalSteps={2} label="REVIEW YOUR PROFILE" />
+        <div className="hidden md:block w-32"></div> {/* Spacer for symmetry on desktop */}
       </div>
 
       {/* Main Container */}
@@ -179,13 +185,13 @@ export default function ProfileReviewPage() {
         {/* LEFT STATIC PANEL */}
         <div className="h-full flex-col items-start justify-center px-6 md:px-12 hidden md:flex relative">
           <div className="anim-number" style={{ transformStyle: 'preserve-3d' }}>
-            <h1 className="font-headline font-black text-[clamp(4rem,16vw,16rem)] leading-[0.8] tracking-tighter text-white m-0 p-0 block select-none">
+            <h1 className="font-headline font-black text-[clamp(6rem,16vw,16rem)] leading-[0.8] tracking-tighter text-white m-0 p-0 block select-none">
               02
             </h1>
           </div>
 
           <div className="anim-heading mt-2" style={{ transformStyle: 'preserve-3d' }}>
-            <h2 className="font-headline font-black uppercase text-[clamp(2.5rem,5vw,5rem)] leading-[0.85] tracking-tighter text-white select-none">
+            <h2 className="font-headline font-black uppercase text-[clamp(3.5rem,5vw,5rem)] leading-[0.85] tracking-tighter text-white select-none">
               <span className="whitespace-nowrap">THIS</span><br />
               <span className="whitespace-nowrap">YOU?</span>
             </h2>
@@ -213,13 +219,16 @@ export default function ProfileReviewPage() {
         </div>
 
         {/* RIGHT SCROLL PANEL */}
-        <div data-lenis-prevent="true" className="h-full max-h-screen-stable overflow-y-auto px-6 md:px-12 pt-32 md:pt-28 pb-12 flex flex-col items-start md:items-end w-full relative">
+        <div data-lenis-prevent="true" className="h-full max-h-screen-stable overflow-y-auto px-6 md:px-12 pt-24 md:pt-28 pb-12 flex flex-col items-start md:items-end w-full relative">
           <div className="w-full max-w-xl mx-auto md:mx-0 flex flex-col gap-4 relative z-10">
             
             {/* Mobile Hero (Only visible on mobile so they still see the title) */}
-            <div className="md:hidden mb-8 mt-12">
-              <h1 className="font-headline font-black text-6xl leading-[0.8] tracking-tighter text-white">02</h1>
-              <h2 className="font-headline font-black uppercase text-4xl leading-[0.85] tracking-tighter text-white mt-2">THIS YOU?</h2>
+            <div className="md:hidden mb-12 mt-4">
+              <h1 className="font-headline font-black text-8xl leading-[0.8] tracking-tighter text-white">02</h1>
+              <h2 className="font-headline font-black uppercase text-6xl leading-[0.85] tracking-tighter text-white mt-2">THIS YOU?</h2>
+              <div className="font-mono uppercase tracking-[0.2em] text-[10px] text-white/40 mt-6 select-none">
+                WE FOUND {fieldCount} {" "} FIELDS &middot; REVIEW BEFORE CONTINUING
+              </div>
             </div>
 
             <FormInput

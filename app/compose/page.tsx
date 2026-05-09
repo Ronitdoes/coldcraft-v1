@@ -1,4 +1,5 @@
 import { requireUserWithProfile } from "@/utils/supabase/auth";
+import type { Profile } from "./client";
 import ComposeClient from "./client";
 
 export default async function ComposePage() {
@@ -7,7 +8,7 @@ export default async function ComposePage() {
   return (
     <main className="min-h-screen-stable bg-black pt-10 pb-12">
       <div className="max-w-7xl mx-auto px-4 md:px-12">
-        <ComposeClient profile={profile as any} />
+        <ComposeClient profile={profile as Profile} />
       </div>
     </main>
   );

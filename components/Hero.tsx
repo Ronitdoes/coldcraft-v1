@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import { gsap, useGSAP } from "@/lib/gsap";
 import dynamic from "next/dynamic";
-import TextRollover from "@/components/TextRollover";
 import GetOverlaySVG from "@/components/GetOverlaySVG";
 import { useAuth } from "@/hooks/useAuth";
 import { createClient } from "@/utils/supabase/client";

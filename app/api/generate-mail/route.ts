@@ -1,18 +1,50 @@
 import { groq } from "@/lib/groq";
 import { MAIL_GENERATION_PROMPT } from "@/lib/prompts";
+import { consumeRateLimit, requireAllowedOrigin, trimText } from "@/lib/security";
 import { createClient } from "@/utils/supabase/server";
 
-export async function POST(req: Request) {
+const POSITION_TYPES = new Set(["internship", "full-time"]);
+const MAIL_TYPES = new Set(["fresh", "follow-up"]);
+const TONES = new Set(["professional", "casual", "bold", "concise"]);
+const WORD_LIMITS = new Set([80, 120, 160]);
 
-  // 1. Auth check — never trust the client
+type GenerateMailInput = {
+  recipient: string;
+  company: string;
+  role: string;
+  positionType: "internship" | "full-time";
+  mailType: "fresh" | "follow-up";
+  tone: "professional" | "casual" | "bold" | "concise";
+  wordLimit: 80 | 120 | 160;
+  extraContext: string;
+};
+
+export async function POST(req: Request) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    return Response.json({ error: "Unauthorized" }, { status: 401 });
+    return Response.json({ error: "Please log in before generating an email." }, { status: 401 });
   }
 
-  // 2. Pull composer inputs
+  const originError = requireAllowedOrigin(req);
+  if (originError) return originError;
+
+  const rateLimitError = await consumeRateLimit(user.id, "generate-mail");
+  if (rateLimitError) return rateLimitError;
+
+  let rawInput: unknown;
+  try {
+    rawInput = await req.json();
+  } catch {
+    return Response.json({ error: "Something was wrong with the request. Please refresh and try again." }, { status: 400 });
+  }
+
+  const input = validateGenerateMailInput(rawInput);
+  if ("error" in input) {
+    return Response.json({ error: input.error }, { status: 400 });
+  }
+
   const {
     recipient,
     company,
@@ -22,17 +54,8 @@ export async function POST(req: Request) {
     tone,
     wordLimit,
     extraContext,
-  } = await req.json();
+  } = input;
 
-  // 3. Validate required fields
-  if (!recipient || !company || !role) {
-    return Response.json(
-      { error: "recipient, company, and role are required" },
-      { status: 400 }
-    );
-  }
-
-  // 4. Fetch user profile from Supabase
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
     .select("name, college, year, github, linkedin, portfolio, skills, projects")
@@ -41,12 +64,11 @@ export async function POST(req: Request) {
 
   if (profileError || !profile) {
     return Response.json(
-      { error: "Profile not found. Complete onboarding first." },
+      { error: "Please complete your profile before generating an email." },
       { status: 404 }
     );
   }
 
-  // 5. Build user message
   const userMessage = `
 Write a ${mailType === "follow-up" ? "follow-up" : "fresh"} cold email
 for a ${positionType} position.
@@ -71,7 +93,6 @@ MAIL TARGET:
 - Position type: ${positionType}
 `;
 
-  // 6. Call Groq
   let completion;
   try {
     completion = await groq.chat.completions.create({
@@ -86,30 +107,27 @@ MAIL TARGET:
   } catch (err) {
     console.error("Groq error:", err);
     return Response.json(
-      { error: "Generation failed. Try again." },
+      { error: "We could not generate your email right now. Please try again." },
       { status: 500 }
     );
   }
 
   const output = completion.choices[0].message.content ?? "";
-
-  // 7. Parse subject and body
   const lines = output.split("\n");
-  const subjectLine = lines.find(l => l.startsWith("SUBJECT:"));
+  const subjectLine = lines.find((line) => line.startsWith("SUBJECT:"));
   const subject = subjectLine?.replace("SUBJECT:", "").trim() ?? "";
   const body = lines
-    .filter(l => !l.startsWith("SUBJECT:"))
+    .filter((line) => !line.startsWith("SUBJECT:"))
     .join("\n")
     .trim();
 
   if (!subject || !body) {
     return Response.json(
-      { error: "Malformed output. Try regenerating." },
+      { error: "The generated email was incomplete. Please try regenerating it." },
       { status: 500 }
     );
   }
 
-  // 8. Save to mail_history
   const { error: insertError } = await supabase
     .from("mail_history")
     .insert({
@@ -121,26 +139,71 @@ MAIL TARGET:
       mail_type: mailType,
       position_type: positionType,
       word_limit: wordLimit,
-      extra_context: extraContext ?? null,
+      extra_context: extraContext || null,
       subject,
       body,
     });
 
   if (insertError) {
     console.error("Supabase insert error:", insertError);
-    // Do not fail the request — return the mail even if save fails
   }
 
-  // 9. Return to frontend
   return Response.json({ subject, body });
 }
 
-function getToneTemperature(tone: string): number {
-  const map: Record<string, number> = {
+function getToneTemperature(tone: GenerateMailInput["tone"]): number {
+  const map: Record<GenerateMailInput["tone"], number> = {
     professional: 0.5,
     concise: 0.4,
     casual: 0.8,
     bold: 0.85,
   };
-  return map[tone] ?? 0.6;
+  return map[tone];
+}
+
+function validateGenerateMailInput(value: unknown): GenerateMailInput | { error: string } {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return { error: "Something was wrong with the request. Please refresh and try again." };
+  }
+
+  const payload = value as Record<string, unknown>;
+  const recipient = trimText(payload.recipient, 120);
+  const company = trimText(payload.company, 120);
+  const role = trimText(payload.role, 120);
+  const positionType = trimText(payload.positionType, 40);
+  const mailType = trimText(payload.mailType, 40);
+  const tone = trimText(payload.tone, 40);
+  const wordLimit = Number(payload.wordLimit);
+  const extraContext = trimText(payload.extraContext, 1000);
+
+  if (!recipient || !company || !role) {
+    return { error: "Please fill in the recipient, company, and role fields." };
+  }
+
+  if (!POSITION_TYPES.has(positionType)) {
+    return { error: "Please choose a valid position type." };
+  }
+
+  if (!MAIL_TYPES.has(mailType)) {
+    return { error: "Please choose a valid email type." };
+  }
+
+  if (!TONES.has(tone)) {
+    return { error: "Please choose a valid tone." };
+  }
+
+  if (!WORD_LIMITS.has(wordLimit)) {
+    return { error: "Please choose one of the available word limits." };
+  }
+
+  return {
+    recipient,
+    company,
+    role,
+    positionType: positionType as GenerateMailInput["positionType"],
+    mailType: mailType as GenerateMailInput["mailType"],
+    tone: tone as GenerateMailInput["tone"],
+    wordLimit: wordLimit as GenerateMailInput["wordLimit"],
+    extraContext,
+  };
 }

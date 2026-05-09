@@ -1,6 +1,10 @@
 import { redirect } from "next/navigation";
 import { createClient } from "./server";
 
+type ProfileWithOnboarding = {
+  onboarding_completed?: boolean | null;
+};
+
 /**
  * Server-side helper: gets the authenticated user or redirects to login.
  * Use in Server Components and API routes.
@@ -31,7 +35,7 @@ export async function requireUserWithProfile(
     .eq("id", user.id)
     .single();
 
-  if (error || !profile || !(profile as any).onboarding_completed) {
+  if (error || !profile || !(profile as ProfileWithOnboarding).onboarding_completed) {
     redirect("/onboarding/resume");
   }
 
@@ -54,7 +58,7 @@ export async function requireUserWithoutProfile() {
 
   if (error) {
     console.error("Profile lookup error:", error);
-  } else if ((profile as any)?.onboarding_completed) {
+  } else if ((profile as ProfileWithOnboarding | null)?.onboarding_completed) {
     redirect("/dashboard");
   }
 

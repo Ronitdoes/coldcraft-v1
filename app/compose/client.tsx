@@ -10,7 +10,7 @@ import ToggleGroup from "@/components/ui/ToggleGroup";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import Preloader from "@/components/ui/Preloader";
 
-type Profile = {
+export type Profile = {
   name?: string;
   college?: string;
   year?: string;
@@ -143,13 +143,13 @@ export default function ComposeClient({ profile }: { profile: Profile | null }) 
     window.open(url, "_blank");
   };
 
-  const updateInput = (key: string, value: any) => {
+  const updateInput = <Key extends keyof typeof inputs>(key: Key, value: (typeof inputs)[Key]) => {
     setInputs(prev => ({ ...prev, [key]: value }));
   };
 
   return (
-    <div ref={containerRef} className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-start pb-20">
-      
+    <div ref={containerRef} className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-start pb-20">
+
       {/* LEFT COLUMN */}
       <div className="anim-left flex flex-col gap-6 w-full">
         {isIncompleteProfile && (
@@ -200,7 +200,7 @@ export default function ComposeClient({ profile }: { profile: Profile | null }) 
           />
           {inputs.mailType === "follow-up" && (
             <p className="font-mono uppercase tracking-[0.2em] text-[10px] text-white/20 mt-2">
-              // KEEP IT UNDER 80 WORDS. REFERENCE YOUR LAST MAIL.
+              KEEP IT UNDER 80 WORDS. REFERENCE YOUR LAST MAIL.
             </p>
           )}
         </div>
@@ -246,13 +246,7 @@ export default function ComposeClient({ profile }: { profile: Profile | null }) 
       </div>
 
       {/* RIGHT COLUMN */}
-      <div className="anim-right flex flex-col w-full md:sticky md:top-24 mt-8 md:mt-0">
-        {profile && (
-          <p className="font-mono uppercase tracking-[0.2em] text-[9px] md:text-[10px] text-white/20 mb-6">
-            GENERATING AS: {profile.name} · {profile.college} · GITHUB.COM/{profile.github?.split('/').pop()}
-          </p>
-        )}
-
+      <div className="anim-right flex flex-col w-full md:sticky md:top-10">
         {screen === "empty" && (
           <div className="border border-dashed border-white/10 p-12 min-h-[400px] flex flex-col items-center justify-center gap-6">
             <div className="w-full flex flex-col gap-3 max-w-[80%] mx-auto opacity-30">
@@ -299,18 +293,18 @@ export default function ComposeClient({ profile }: { profile: Profile | null }) 
             </div>
 
             <div className="flex gap-3 pt-4 border-t border-white/5">
-              <button 
+              <button
                 onClick={handleCopy}
                 className="font-mono uppercase tracking-[0.2em] text-[10px] border border-white/10 px-4 py-2 text-white/40 hover:border-white/40 hover:text-white transition-colors duration-200"
               >
                 {copied ? "COPIED ✓" : "COPY"}
               </button>
-              <button 
+              <button
                 onClick={handleGmailOpen}
                 className="font-mono uppercase tracking-[0.2em] text-[10px] border border-white/10 px-4 py-2 text-white/40 hover:border-white/40 hover:text-white transition-colors duration-200 flex items-center gap-2"
               >
                 <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M24 4.5v15c0 .85-.65 1.5-1.5 1.5H21V7.387l-9 6.463-9-6.463V21H1.5C.65 21 0 20.35 0 19.5v-15c0-.425.162-.8.431-1.068C.7 3.16 1.075 3 1.5 3H2l10 7.188L22 3h.5c.425 0 .8.162 1.068.432.27.268.432.643.432 1.068z" fill="currentColor"/>
+                  <path d="M24 4.5v15c0 .85-.65 1.5-1.5 1.5H21V7.387l-9 6.463-9-6.463V21H1.5C.65 21 0 20.35 0 19.5v-15c0-.425.162-.8.431-1.068C.7 3.16 1.075 3 1.5 3H2l10 7.188L22 3h.5c.425 0 .8.162 1.068.432.27.268.432.643.432 1.068z" fill="currentColor" />
                 </svg>
                 OPEN IN GMAIL
               </button>
@@ -329,6 +323,13 @@ export default function ComposeClient({ profile }: { profile: Profile | null }) 
             className="w-full"
           />
         </div>
+      </div>
+
+      {/* BACKGROUND BRANDING */}
+      <div className="fixed right-0 top-0 bottom-0 pointer-events-none hidden md:flex items-center justify-end z-[-1]">
+        <span className="font-headline font-black uppercase text-[15vh] leading-none tracking-tighter text-white/[0.08] rotate-270 whitespace-nowrap translate-x-[40%]">
+          COLDCRAFT
+        </span>
       </div>
     </div>
   );

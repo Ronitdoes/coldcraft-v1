@@ -1,26 +1,9 @@
 "use client";
 
-import { useRef } from "react";
-import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import Logo from "@/components/Logo";
 import TextRollover from "@/components/TextRollover";
 
 export default function Footer() {
-  const container = useRef<HTMLElement>(null);
-
-  useGSAP(() => {
-    gsap.fromTo(container.current,
-      { y: 100, opacity: 0 },
-      {
-        y: 0, opacity: 1, duration: 1.2, ease: "power4.out",
-        scrollTrigger: {
-          trigger: container.current,
-          start: "top 95%",
-        },
-      }
-    );
-  }, { scope: container });
-
   const socialLinks = [
     { label: "GITHUB", href: "#" },
     { label: "LINKEDIN", href: "#" },
@@ -28,7 +11,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer ref={container} className="w-full px-8 md:px-12 py-16 md:py-24 flex flex-col md:flex-row justify-between items-start gap-8 bg-background text-on-background font-body text-xs tracking-widest uppercase relative z-20 border-t border-outline-variant overflow-hidden">
+    <footer className="w-full px-8 md:px-12 py-16 md:py-24 flex flex-col md:flex-row justify-between items-start gap-8 bg-background text-on-background font-body text-xs tracking-widest uppercase relative z-20 border-t border-outline-variant overflow-hidden">
       <div className="flex flex-col gap-8 flex-1 max-w-sm">
         <div className="flex items-center gap-3">
           <Logo className="w-8 h-8 text-on-background" />

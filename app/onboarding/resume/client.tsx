@@ -36,16 +36,17 @@ export default function ResumeUploadPage() {
   useGSAP(() => {
     if (!containerRef.current) return;
     
-    // Explicit array to strictly control stagger order: "01", heading, upload zone, callout
+    // Explicit targets to ensure correct stagger order and prevent missing elements
     const targets = [
       containerRef.current.querySelector('.anim-number'),
       containerRef.current.querySelector('.anim-heading'),
+      containerRef.current.querySelector('.anim-subheading'),
       containerRef.current.querySelector('.anim-upload'),
       containerRef.current.querySelector('.anim-callout')
     ];
 
     gsap.fromTo(
-      targets,
+      targets.filter(Boolean), // Filter out any nulls just in case
       { rotateX: -90, opacity: 0, y: 30, transformOrigin: "bottom center" },
       { rotateX: 0, opacity: 1, y: 0, duration: 1.2, stagger: 0.08, ease: "power4.out" }
     );
@@ -69,7 +70,8 @@ export default function ResumeUploadPage() {
   };
 
   const processFile = async (file: File) => {
-    if (file && file.type === "application/pdf") {
+    const isPdf = file && file.type === "application/pdf";
+    if (isPdf) {
       setSelectedFile(file);
       setIsUploading(true);
       setLoadingStep(0);
@@ -125,34 +127,36 @@ export default function ResumeUploadPage() {
   };
 
   return (
-    <div ref={containerRef} className="min-h-screen-stable w-full bg-black overflow-x-hidden relative flex flex-col items-center perspective-[1200px] pb-24 md:pb-0">
+    <div ref={containerRef} className="min-h-screen-stable w-full bg-black overflow-x-hidden relative flex flex-col items-center perspective-[1200px]">
       
       {/* Top Navbar */}
-      <div className="fixed top-0 left-0 right-0 h-20 md:h-24 bg-black/60 backdrop-blur-md z-40 border-b border-white/5 flex items-center px-6 md:px-12">
-        <BrandHeader />
-      </div>
+      <div className="fixed top-0 left-0 right-0 h-20 md:h-24 bg-black/60 backdrop-blur-md z-40 border-b border-white/5 flex items-center justify-between px-6 md:px-12">
+        <BrandHeader className="flex-shrink-0" />
+        
+        {/* Step Indicator (Desktop: Center, Mobile: Right-ish) */}
+        <div className="anim-step static md:absolute md:left-1/2 md:-translate-x-1/2">
+          <StepIndicator currentStep={1} totalSteps={2} label="UPLOAD RESUME" />
+        </div>
 
-      {/* Step Indicator (Top Center) */}
-      <div className="anim-step fixed top-6 md:top-8 left-1/2 -translate-x-1/2 z-50">
-        <StepIndicator currentStep={1} totalSteps={2} label="UPLOAD RESUME" />
+        <div className="hidden md:block w-32"></div> {/* Spacer for symmetry on desktop */}
       </div>
 
       {/* Main Content Container */}
-      <div className="w-full max-w-6xl px-4 md:px-12 flex flex-col justify-center items-center min-h-screen-stable pt-32 md:pt-0">
+      <div className="w-full max-w-6xl px-4 md:px-12 flex flex-col justify-start md:justify-center items-center min-h-0 md:min-h-screen-stable pt-20 md:pt-45 relative">
         
         {/* Split Layout Grid */}
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center">
           
           {/* Left Column: 01 + Heading */}
           <div className="flex flex-col items-start justify-center">
             <div className="anim-number" style={{ transformStyle: "preserve-3d" }}>
-              <h1 className="font-headline font-black text-[clamp(4rem,16vw,16rem)] leading-[0.8] tracking-tighter text-white m-0 p-0 block select-none">
+              <h1 className="font-headline font-black text-[clamp(6rem,16vw,16rem)] leading-[0.8] tracking-tighter text-white m-0 p-0 block select-none">
                 01
               </h1>
             </div>
 
             <div className="anim-heading mt-4 md:mt-2" style={{ transformStyle: "preserve-3d" }}>
-              <h2 className="font-headline font-black uppercase text-[clamp(2.5rem,5vw,5rem)] leading-[0.85] tracking-tighter text-white select-none">
+              <h2 className="font-headline font-black uppercase text-[clamp(3.5rem,5vw,5rem)] leading-[0.85] tracking-tighter text-white select-none">
                 <span className="whitespace-nowrap">First, your</span><br />
                 <span className="whitespace-nowrap">resume.</span>
               </h2>
@@ -237,12 +241,18 @@ export default function ResumeUploadPage() {
             </div>
           </div>
         </div>
+
+        {/* Bottom trust line (Mobile: Natural flow to remove empty space) */}
+        <div className="md:hidden mt-12 mb-12 font-mono uppercase tracking-[0.2em] text-[10px] text-white/20 select-none text-center">
+          YOUR RESUME IS DELETED AFTER PARSING.
+        </div>
       </div>
 
-      {/* Bottom trust line */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 font-mono uppercase tracking-[0.2em] text-[10px] md:text-[15px] text-white/20 whitespace-nowrap select-none">
+      {/* Bottom trust line (Desktop: Fixed at bottom) */}
+      <div className="hidden md:block absolute bottom-12 left-1/2 -translate-x-1/2 font-mono uppercase tracking-[0.2em] text-[15px] text-white/20 select-none whitespace-nowrap z-10">
         YOUR RESUME IS DELETED AFTER PARSING.
       </div>
+
 
     </div>
   );

@@ -16,7 +16,7 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
       touchMultiplier: 2,
     });
 
-    (window as any).lenis = lenis;
+    Reflect.set(window, "lenis", lenis);
 
     // Sync Lenis with GSAP's ticker for a single unified render loop
     lenis.on("scroll", ScrollTrigger.update);
@@ -28,7 +28,7 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
 
     return () => {
       lenis.off("scroll", ScrollTrigger.update);
-      delete (window as any).lenis;
+      Reflect.deleteProperty(window, "lenis");
       lenis.destroy();
     };
   }, []);

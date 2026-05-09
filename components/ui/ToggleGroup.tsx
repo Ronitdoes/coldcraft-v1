@@ -11,7 +11,7 @@ interface ToggleGroupProps {
   label: string;
   options: ToggleOption[];
   value: string | number;
-  onChange: (value: any) => void;
+  onChange: (value: string) => void;
   /** Grid columns for layout (default: auto-flow) */
   columns?: number;
   /** Optional hint text below the group */

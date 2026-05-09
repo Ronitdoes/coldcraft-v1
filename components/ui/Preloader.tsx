@@ -40,25 +40,25 @@ export default function Preloader({ message = "CRAFTING", fullScreen = true }: P
 
   const containerClasses = fullScreen 
     ? "fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center gap-8"
-    : "w-full h-full min-h-[200px] flex flex-col items-center justify-center gap-6 bg-black/50 backdrop-blur-sm";
+    : "absolute inset-0 z-10 flex flex-col items-center justify-center gap-6 bg-black/80 backdrop-blur-sm rounded-none";
 
   return (
     <div ref={containerRef} className={containerClasses}>
       <div className="relative">
-        <Logo className="w-12 h-12 md:w-16 md:h-16 text-white" />
-        <div className="absolute inset-0 bg-white/10 blur-xl rounded-full -z-10 animate-pulse" />
+        <Logo className="w-10 h-10 md:w-12 md:h-12 text-white" />
+        <div className="absolute inset-0 bg-white/5 blur-xl rounded-full -z-10 animate-pulse" />
       </div>
 
-      <div className="flex flex-col items-center gap-3">
+      <div className="flex flex-col items-center gap-3 px-6 w-full">
         <div 
           ref={textRef}
-          className="font-headline font-bold text-xl md:text-2xl tracking-[0.3em] text-white uppercase select-none"
+          className="font-headline font-bold text-xs md:text-sm tracking-[0.3em] text-white uppercase select-none text-center leading-tight"
         >
           {message}
         </div>
         
         {/* Brutalist Progress Line */}
-        <div className="w-48 h-[2px] bg-white/10 relative overflow-hidden">
+        <div className="w-32 h-[1px] bg-white/10 relative overflow-hidden">
           <div 
             ref={progressRef}
             className="absolute inset-0 bg-white origin-left scale-x-0"
@@ -66,7 +66,7 @@ export default function Preloader({ message = "CRAFTING", fullScreen = true }: P
         </div>
       </div>
 
-      <div className="font-mono text-[10px] tracking-[0.2em] text-white/20 uppercase mt-4">
+      <div className="font-mono text-[9px] tracking-[0.2em] text-white/20 uppercase mt-2">
         PLEASE STAND BY
       </div>
     </div>

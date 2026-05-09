@@ -41,13 +41,13 @@ export default function CustomScrollbar() {
   }, [getThumbHeight]);
 
   useEffect(() => {
-    setIsMounted(true);
+    const mountFrame = requestAnimationFrame(() => setIsMounted(true));
 
     const renderLoop = () => {
       if (!thumbRef.current) return;
-      const lenisInst = (window as any).lenis;
+      const lenisInst = Reflect.get(window, "lenis") as { scroll?: number } | undefined;
       const winScroll = lenisInst
-        ? lenisInst.scroll
+        ? lenisInst.scroll ?? 0
         : document.documentElement.scrollTop;
       const maxScroll =
         document.documentElement.scrollHeight -
@@ -72,6 +72,7 @@ export default function CustomScrollbar() {
     window.addEventListener("scroll", markScrolling, { passive: true });
 
     return () => {
+      cancelAnimationFrame(mountFrame);
       gsap.ticker.remove(renderLoop);
       window.removeEventListener("scroll", markScrolling);
       if (scrollTimeout.current) clearTimeout(scrollTimeout.current);

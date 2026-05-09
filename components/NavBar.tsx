@@ -1,21 +1,21 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import Logo from "@/components/Logo";
 import TextRollover from "@/components/TextRollover";
 import { useAuth } from "@/hooks/useAuth";
 
+function getCurrentDateLabel() {
+  const months = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+  const now = new Date();
+  return `${months[now.getMonth()]} ${now.getDate()} ${now.getFullYear()}`;
+}
+
 export default function NavBar() {
   const container = useRef<HTMLElement>(null);
-  const [currentDate, setCurrentDate] = useState<string>("MAY 23 2024");
+  const currentDate = getCurrentDateLabel();
   const { email, signOut } = useAuth();
-
-  useEffect(() => {
-    const months = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
-    const now = new Date();
-    setCurrentDate(`${months[now.getMonth()]} ${now.getDate()} ${now.getFullYear()}`);
-  }, []);
 
   useGSAP(() => {
     gsap.fromTo(".nav-item",
@@ -30,7 +30,10 @@ export default function NavBar() {
         {currentDate}
       </div>
       <div 
-        onClick={() => (window as any).lenis?.scrollTo(0)}
+        onClick={() => {
+          const lenis = Reflect.get(window, "lenis") as { scrollTo?: (target: number) => void } | undefined;
+          lenis?.scrollTo?.(0);
+        }}
         className="flex justify-center items-center gap-2 md:gap-3 justify-self-center nav-item text-on-background opacity-0 -translate-y-5 cursor-pointer hover:opacity-80 transition-opacity"
       >
         <Logo className="w-6 h-6 md:w-8 md:h-8" />

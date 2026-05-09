@@ -53,7 +53,12 @@ export default function DashboardClient() {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [greeting, setGreeting] = useState("");
-  const greetingPicked = useRef(false);
+  const [imgError, setImgError] = useState(false);
+
+  // Derived State
+  const greetingParts = greeting.split(", ");
+  const phrase = greetingParts[0];
+  const nameWithDot = greetingParts[1];
 
   useEffect(() => {
     if (!isPageAnimationFinished) return;
@@ -62,25 +67,6 @@ export default function DashboardClient() {
     }, 2000);
     return () => clearInterval(interval);
   }, [isPageAnimationFinished]);
-
-  useEffect(() => {
-    if (greetingPicked.current) return;
-
-    const name = profile?.name || user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split("@")[0];
-    if (name) {
-      setGreeting(getGreeting(name));
-      greetingPicked.current = true;
-    } else if (!isLoading) {
-      // Fallback if still no name after loading
-      setGreeting(getGreeting(null));
-      greetingPicked.current = true;
-    }
-  }, [profile, user, isLoading]);
-
-  // Derived State
-  const greetingParts = greeting.split(", ");
-  const phrase = greetingParts[0];
-  const nameWithDot = greetingParts[1];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -99,6 +85,15 @@ export default function DashboardClient() {
 
       if (profileResponse.data) setProfile(profileResponse.data);
       if (mailResponse.data) setMailHistory(mailResponse.data);
+
+      const profileName = profileResponse.data?.name;
+      const metadataName = typeof session.user.user_metadata?.full_name === "string"
+        ? session.user.user_metadata.full_name
+        : session.user.user_metadata?.name;
+      const fallbackName = typeof metadataName === "string"
+        ? metadataName
+        : session.user.email?.split("@")[0];
+      setGreeting(getGreeting(profileName || fallbackName || null));
 
       setIsLoading(false);
     };
@@ -138,7 +133,7 @@ export default function DashboardClient() {
       { opacity: 1, y: 0, duration: 0.8, stagger: 0.1 },
       "-=0.6"
     );
-  }, [isLoading]);
+  }, { dependencies: [isLoading, greeting], scope: containerRef });
 
   const toggleExpand = (id: string) => {
     setExpandedMails(prev => {
@@ -205,13 +200,20 @@ export default function DashboardClient() {
             className="flex items-center gap-2 sm:gap-3 cursor-pointer group px-2 sm:px-3 py-1.5 hover:bg-white/5 transition-colors border border-transparent hover:border-white/10 select-none"
             onClick={() => setShowProfileDropdown(!showProfileDropdown)}
           >
-            {user?.user_metadata?.avatar_url && (
+            {(user?.user_metadata?.avatar_url && !imgError) ? (
               <img 
                 src={user.user_metadata.avatar_url} 
                 alt="Avatar" 
                 className="w-7 h-7 rounded-full object-cover border border-white/10"
                 referrerPolicy="no-referrer"
+                onError={() => setImgError(true)}
               />
+            ) : (
+              <div className="w-7 h-7 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+                <span className="font-mono text-[10px] text-white/40">
+                  {(profile?.name || user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email || "?")[0].toUpperCase()}
+                </span>
+              </div>
             )}
             <div className="flex flex-col items-start hidden sm:block">
               <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/40 group-hover:text-white transition-colors truncate max-w-[120px]">
@@ -302,29 +304,40 @@ export default function DashboardClient() {
       <main className="max-w-7xl mx-auto px-4 md:px-12 pt-32 md:pt-40">
         
         {/* Hero Greeting */}
-        <div className="anim-greeting mb-10 overflow-visible">
-          <h1 className="font-headline font-black uppercase text-[clamp(3.5rem,8vw,8.5rem)] leading-[0.8] tracking-tighter text-white" style={{ perspective: "1000px" }}>
-            <span className="inline-block whitespace-nowrap">
-              {`${phrase}${nameWithDot ? "," : ""}`.split("").map((char, i) => (
-                <span key={`p-${i}`} className="greeting-char inline-block opacity-0" style={{ transformStyle: "preserve-3d" }}>
-                  {char === " " ? "\u00A0" : char}
-                </span>
-              ))}
-            </span>
-            {nameWithDot && (
-              <>
-                <br />
-                <span className="inline-block whitespace-nowrap">
-                  {nameWithDot.split("").map((char, i) => (
-                    <span key={`n-${i}`} className="greeting-char inline-block opacity-0" style={{ transformStyle: "preserve-3d" }}>
-                      {char === " " ? "\u00A0" : char}
+        <div key={greeting} className="anim-greeting mb-10 overflow-visible">
+          <h1 className="font-headline font-black uppercase text-[clamp(2.2rem,6.5vw,7.5rem)] leading-[0.85] tracking-tighter text-white pr-4 py-2 text-left overflow-visible">
+            {/* Phrase Line */}
+            <div className="block overflow-visible">
+              {phrase.split(" ").map((word, wordIdx, arr) => (
+                <span key={`p-${wordIdx}`} className="inline-block whitespace-nowrap mr-[0.25em] overflow-visible">
+                  {word.split("").map((char, i) => (
+                    <span key={`p-${wordIdx}-${i}`} className="greeting-char inline-block opacity-0">
+                      {char}
                     </span>
                   ))}
+                  {wordIdx === arr.length - 1 && nameWithDot && (
+                    <span className="greeting-char inline-block opacity-0">,</span>
+                  )}
                 </span>
-              </>
+              ))}
+            </div>
+            
+            {/* Name Line */}
+            {nameWithDot && (
+              <div className="block overflow-visible">
+                {nameWithDot.split(" ").map((word, wordIdx) => (
+                  <span key={`n-${wordIdx}`} className="inline-block whitespace-nowrap mr-[0.25em] overflow-visible">
+                    {word.split("").map((char, i) => (
+                      <span key={`n-${wordIdx}-${i}`} className="greeting-char inline-block opacity-0">
+                        {char}
+                      </span>
+                    ))}
+                  </span>
+                ))}
+              </div>
             )}
           </h1>
-          <div className="anim-sub font-mono uppercase tracking-[0.2em] text-[15px] text-white/40 mt-4 opacity-0 flex items-center justify-center">
+          <div className="anim-sub font-mono uppercase tracking-[0.2em] text-[13px] md:text-[15px] text-white/40 mt-4 opacity-0 flex items-center justify-center text-center">
             YOUR NEXT REPLY STARTS&nbsp;
             <TextRollover 
               text="HERE." 
