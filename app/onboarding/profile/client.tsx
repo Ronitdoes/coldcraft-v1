@@ -122,13 +122,13 @@ export default function ProfileReviewPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-[100dvh] w-full bg-black overflow-x-hidden relative">
+      <div className="min-h-screen-stable w-full bg-black overflow-x-hidden relative">
         <BrandHeader className="absolute top-8 left-8 z-20" />
         <div className="absolute top-24 md:top-10 left-1/2 -translate-x-1/2">
           <StepIndicator currentStep={2} totalSteps={2} label="REVIEW YOUR PROFILE" />
         </div>
         
-        <div className="w-full max-w-6xl px-4 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center min-h-[100dvh] pt-32 pb-24 md:py-24 mx-auto">
+        <div className="w-full max-w-6xl px-4 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center min-h-screen-stable pt-32 pb-24 md:py-24 mx-auto">
           {/* Left Column Skeleton */}
           <div className="flex flex-col items-start justify-center pt-16 md:pt-0">
             <div className="w-32 h-32 md:w-48 md:h-48 bg-white/[0.03] animate-pulse mb-6" />
@@ -161,7 +161,7 @@ export default function ProfileReviewPage() {
   }
 
   return (
-    <div ref={containerRef} className="h-[100dvh] w-full bg-black overflow-hidden relative perspective-[1200px]">
+    <div ref={containerRef} className="h-screen-stable w-full bg-black overflow-hidden relative perspective-[1200px]">
 
       {/* Top Left Logo */}
       <BrandHeader className="absolute top-8 left-8 z-20" />
@@ -211,7 +211,7 @@ export default function ProfileReviewPage() {
         </div>
 
         {/* RIGHT SCROLL PANEL */}
-        <div data-lenis-prevent="true" className="h-full max-h-[100dvh] overflow-y-auto px-6 md:px-12 pt-32 md:pt-28 pb-12 flex flex-col items-start md:items-end w-full relative">
+        <div data-lenis-prevent="true" className="h-full max-h-screen-stable overflow-y-auto px-6 md:px-12 pt-32 md:pt-28 pb-12 flex flex-col items-start md:items-end w-full relative">
           <div className="w-full max-w-xl mx-auto md:mx-0 flex flex-col gap-4 relative z-10">
             
             {/* Mobile Hero (Only visible on mobile so they still see the title) */}

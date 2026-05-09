@@ -64,7 +64,7 @@ export default function Hero() {
   return (
     <section 
       ref={container}
-      className="min-h-screen flex flex-col justify-center px-4 md:px-8 pb-8 md:pb-16 pt-32 md:pt-48 overflow-hidden bg-black perspective-[1000px] relative"
+      className="min-h-screen-stable flex flex-col justify-center px-4 md:px-8 pb-8 md:pb-16 pt-32 md:pt-48 overflow-hidden bg-black perspective-[1000px] relative"
     >
       <EmailFlowAnimation />
       <div className="relative w-full text-center py-4 flex flex-col items-center justify-center pointer-events-none z-10">

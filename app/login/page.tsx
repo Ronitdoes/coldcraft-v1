@@ -58,7 +58,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-black flex flex-col items-center justify-center relative overflow-hidden perspective-[1000px] px-4">
+    <div ref={containerRef} className="min-h-screen-stable bg-black flex flex-col items-center justify-center relative overflow-hidden perspective-[1000px] px-4">
       {/* Decorative background */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/[0.03] to-transparent pointer-events-none z-0" />
 

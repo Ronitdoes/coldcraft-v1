@@ -4,6 +4,7 @@ import SmoothScroll from "@/components/SmoothScroll";
 import "./globals.css";
 
 import CustomScrollbar from "@/components/CustomScrollbar";
+import { ViewportFix } from "@/components/utils/ViewportFix";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -42,6 +43,7 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-background text-on-background selection:bg-primary selection:text-on-primary" data-mode="connect">
+        <ViewportFix />
         <CustomScrollbar />
         <SmoothScroll>{children}</SmoothScroll>
       </body>

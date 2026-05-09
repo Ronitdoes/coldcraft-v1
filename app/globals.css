@@ -98,3 +98,19 @@ body {
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
 }
+
+/* Stable Viewport Utilities */
+.h-screen-stable {
+  height: 100vh; /* Fallback */
+  height: calc(var(--vh, 1vh) * 100);
+}
+
+.min-h-screen-stable {
+  min-height: 100vh; /* Fallback */
+  min-height: calc(var(--vh, 1vh) * 100);
+}
+
+.max-h-screen-stable {
+  max-height: 100vh; /* Fallback */
+  max-height: calc(var(--vh, 1vh) * 100);
+}

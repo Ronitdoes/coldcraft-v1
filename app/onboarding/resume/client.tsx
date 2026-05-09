@@ -125,7 +125,7 @@ export default function ResumeUploadPage() {
   };
 
   return (
-    <div ref={containerRef} className="min-h-[100dvh] w-full bg-black overflow-x-hidden relative flex flex-col items-center perspective-[1200px] pb-24 md:pb-0">
+    <div ref={containerRef} className="min-h-screen-stable w-full bg-black overflow-x-hidden relative flex flex-col items-center perspective-[1200px] pb-24 md:pb-0">
       
       {/* Top Logo */}
       <BrandHeader className="absolute top-8 left-8 z-20" />
@@ -136,7 +136,7 @@ export default function ResumeUploadPage() {
       </div>
 
       {/* Main Content Container */}
-      <div className="w-full max-w-6xl px-4 md:px-12 flex flex-col justify-center items-center min-h-[100dvh] pt-32 md:pt-0">
+      <div className="w-full max-w-6xl px-4 md:px-12 flex flex-col justify-center items-center min-h-screen-stable pt-32 md:pt-0">
         
         {/* Split Layout Grid */}
         <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">

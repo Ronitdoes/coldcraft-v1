@@ -196,7 +196,7 @@ export default function DashboardClient() {
   }
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-black text-white pb-24 overflow-x-hidden">
+    <div ref={containerRef} className="min-h-screen-stable bg-black text-white pb-24 overflow-x-hidden">
       {/* Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black border-b border-white/5 px-4 md:px-8 pt-6 md:pt-8 pb-4 flex items-center justify-between">
         <BrandHeader />
