@@ -12,7 +12,7 @@ function getCurrentDateLabel() {
   return `${months[now.getMonth()]} ${now.getDate()} ${now.getFullYear()}`;
 }
 
-export default function NavBar() {
+export default function NavBar({ hide }: { hide?: boolean }) {
   const container = useRef<HTMLElement>(null);
   const currentDate = getCurrentDateLabel();
   const { email, signOut } = useAuth();
@@ -25,7 +25,10 @@ export default function NavBar() {
   }, { scope: container });
 
   return (
-    <nav ref={container} className="bg-background/90 backdrop-blur-md flex justify-between md:grid md:grid-cols-3 items-center w-full pl-4 md:pl-8 pr-12 md:pr-16 py-4 md:py-6 max-w-full mx-auto fixed top-0 z-50 border-b border-outline-variant">
+    <nav 
+      ref={container} 
+      className={`bg-background/90 backdrop-blur-md flex justify-between md:grid md:grid-cols-3 items-center w-full pl-4 md:pl-8 pr-12 md:pr-16 py-4 md:py-6 max-w-full mx-auto fixed top-0 z-50 border-b border-outline-variant transition-opacity duration-300 ${hide ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+    >
       <div className="hidden md:block font-headline uppercase tracking-widest text-xs font-bold text-on-surface-variant nav-item opacity-0 -translate-y-5">
         {currentDate}
       </div>

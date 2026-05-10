@@ -52,6 +52,7 @@ export default function DashboardClient({
 
   // State
   const [isLoading, setIsLoading] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const [user, setUser] = useState<any>(initialUser);
   const [profile, setProfile] = useState<Profile | null>(initialProfile);
   const [mailHistory, setMailHistory] = useState<MailHistory[]>(initialMailHistory);
@@ -179,8 +180,12 @@ export default function DashboardClient({
   }
 
   return (
-    <div ref={containerRef} className="min-h-screen-stable bg-black text-white pb-24">
-      {/* Navbar */}
+    <div 
+      ref={containerRef} 
+      key={greeting} 
+      className="min-h-screen-stable bg-black text-white selection:bg-white selection:text-black relative overflow-hidden"
+    >
+      {isRedirecting && <Preloader message="SYNCING" />}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/5 px-4 md:px-8 pt-6 md:pt-8 pb-4 flex items-center justify-between">
         <BrandHeader />
         <div className="flex items-center gap-4 relative">
@@ -344,7 +349,10 @@ export default function DashboardClient({
             subtitle="Personalise"
             variant="flat"
             size="sm"
-            onClick={() => router.push("/compose")}
+            onClick={() => {
+              setIsRedirecting(true);
+              router.push("/compose");
+            }}
             className="w-full md:w-auto"
           />
           <PrimaryButton 
@@ -352,7 +360,10 @@ export default function DashboardClient({
             subtitle="Stay Persistent"
             variant="flat"
             size="sm"
-            onClick={() => router.push("/compose?type=followup")}
+            onClick={() => {
+              setIsRedirecting(true);
+              router.push("/compose?type=followup");
+            }}
             className="w-full md:w-auto border border-white/10"
           />
         </div>

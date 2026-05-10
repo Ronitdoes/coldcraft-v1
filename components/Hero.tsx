@@ -8,19 +8,24 @@ import dynamic from "next/dynamic";
 import GetOverlaySVG from "@/components/GetOverlaySVG";
 import { useAuth } from "@/hooks/useAuth";
 import { createClient } from "@/utils/supabase/client";
+import { useState } from "react";
 
 const EmailFlowAnimation = dynamic(() => import("@/components/EmailFlowAnimation"), {
   ssr: false,
   loading: () => null,
 });
 
-export default function Hero() {
+export default function Hero({ onRedirect }: { onRedirect?: () => void }) {
   const container = useRef<HTMLElement>(null);
   const router = useRouter();
+  const [isLocalRedirect, setIsLocalRedirect] = useState(false);
 
   const { user } = useAuth();
 
   const handleCTA = async () => {
+    onRedirect?.();
+    setIsLocalRedirect(true);
+    
     if (user) {
       const supabase = createClient();
       const { data: profile } = await supabase
