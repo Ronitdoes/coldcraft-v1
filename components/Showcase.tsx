@@ -69,7 +69,7 @@ export default function Showcase() {
   };
 
   return (
-    <section id="how-it-works" ref={container} className="h-screen min-h-[600px] md:min-h-[700px] w-full bg-black relative overflow-hidden flex items-center py-4 md:py-24">
+    <section id="how-it-works" ref={container} className="h-[100dvh] md:h-screen min-h-[600px] md:min-h-[700px] w-full bg-black relative overflow-hidden flex flex-col justify-center pt-24 pb-8 md:py-24">
       <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 w-full relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-12 lg:gap-20 items-center w-full">
         
@@ -162,7 +162,7 @@ export default function Showcase() {
                   <div className="font-body text-[10px] leading-relaxed opacity-60 uppercase tracking-[0.2em] font-bold text-white mb-4">
                     WE EXTRACT EVERYTHING AUTOMATICALLY
                   </div>
-                  <div className="border border-dashed border-white/20 bg-white/[0.02] p-8 flex flex-col items-center justify-center w-full min-h-[200px]">
+                  <div className="border border-dashed border-white/20 bg-white/[0.02] p-6 md:p-8 flex flex-col items-center justify-center w-full min-h-[160px] md:min-h-[200px]">
                     <div className="w-10 h-10 border border-white/10 bg-white/5 flex items-center justify-center mb-4">
                       <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-white/40"><path d="M12 20V4M12 4L5 11M12 4L19 11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     </div>
