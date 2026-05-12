@@ -29,7 +29,7 @@ export default function Footer() {
     }
   };
 
-  const handleShowcaseStep = (step: number) => {
+  const scrollToShowcaseStep = (step: number) => {
     if ((window as any).setShowcaseStep) {
       (window as any).setShowcaseStep(step);
     } else {
@@ -70,13 +70,13 @@ export default function Footer() {
           </a>
           <a 
             className="text-on-surface-variant hover:text-on-background transition-colors text-lg font-headline font-bold cursor-pointer" 
-            onClick={() => handleShowcaseStep(1)}
+            onClick={() => scrollToShowcaseStep(2)}
           >
             <TextRollover text="Resume parser" />
           </a>
           <a 
             className="text-on-surface-variant hover:text-on-background transition-colors text-lg font-headline font-bold cursor-pointer" 
-            onClick={() => handleShowcaseStep(4)}
+            onClick={() => scrollToShowcaseStep(4)}
           >
             <TextRollover text="Mail composer" />
           </a>

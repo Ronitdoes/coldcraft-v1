@@ -64,7 +64,7 @@ export default function CustomScrollbar() {
   }, []);
 
   useGSAP(() => {
-    if (isMounted && containerRef.current) {
+    if (isMounted && canScroll && containerRef.current) {
       gsap.to(containerRef.current, {
         x: 0,
         opacity: 1,
@@ -73,7 +73,7 @@ export default function CustomScrollbar() {
         ease: "power4.out",
       });
     }
-  }, [isMounted]);
+  }, [isMounted, canScroll]);
 
   useEffect(() => {
     const mountFrame = requestAnimationFrame(() => {
@@ -87,6 +87,9 @@ export default function CustomScrollbar() {
 
     if (document.body) {
       resizeObserver.observe(document.body);
+    }
+    if (document.documentElement) {
+      resizeObserver.observe(document.documentElement);
     }
 
     const renderLoop = () => {

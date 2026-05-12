@@ -8,11 +8,12 @@ import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 export default function Showcase() {
   const [step, setStep] = useState(1);
   const container = useRef<HTMLElement>(null);
+  const stRef = useRef<any>(null);
   const pinDistance = 1900
 
   // Use GSAP to pin the section and map scroll progress to steps
   useGSAP(() => {
-    ScrollTrigger.create({
+    stRef.current = ScrollTrigger.create({
       trigger: container.current,
       start: "top top",
       end: `+=${pinDistance}`,
@@ -31,17 +32,27 @@ export default function Showcase() {
   // Expose global function for redirection from Footer/Hero
   useEffect(() => {
     (window as any).setShowcaseStep = (s: number) => {
-      const el = document.getElementById("how-it-works");
-      if (el) {
-        // Calculate scroll offset based on the step (0, 0.25, 0.5, 0.75 of pinDistance)
-        const offsetAmount = (s - 1) * (pinDistance / 4);
+      const attemptScroll = (retries = 10) => {
+        const st = stRef.current;
+        if (!st) {
+          if (retries > 0) setTimeout(() => attemptScroll(retries - 1), 100);
+          return;
+        }
+
+        // Find the middle of the step's progress zone
+        // Step 1: 0.125, Step 2: 0.375, Step 3: 0.625, Step 4: 0.875
+        const targetProgress = (s - 1) * 0.25 + 0.125;
+        const targetScroll = st.start + ((st.end - st.start) * targetProgress);
+
         const lenis = (window as any).lenis;
         if (lenis?.scrollTo) {
-          lenis.scrollTo(el, { offset: offsetAmount });
+          lenis.scrollTo(targetScroll);
         } else {
-          window.scrollTo({ top: el.offsetTop + offsetAmount, behavior: "smooth" });
+          window.scrollTo({ top: targetScroll, behavior: "smooth" });
         }
-      }
+      };
+
+      attemptScroll();
     };
   }, []);
 
