@@ -38,14 +38,18 @@ type MailHistory = {
   created_at: string;
 };
 
+const PAGE_SIZE = 10;
+
 export default function DashboardClient({ 
   initialUser, 
   initialProfile, 
-  initialMailHistory 
+  initialMailHistory,
+  initialHasMore,
 }: { 
   initialUser: any; 
   initialProfile: Profile | null; 
   initialMailHistory: MailHistory[];
+  initialHasMore: boolean;
 }) {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -63,6 +67,8 @@ export default function DashboardClient({
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [greeting, setGreeting] = useState("");
   const [imgError, setImgError] = useState(false);
+  const [hasMore, setHasMore] = useState(initialHasMore);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   // Derived State
   const greetingParts = greeting.split(", ");
@@ -150,6 +156,27 @@ export default function DashboardClient({
       wordLimit: String(mail.word_limit || 120),
     });
     router.push(`/compose?${params.toString()}`);
+  };
+
+  const handleLoadMore = async () => {
+    setLoadingMore(true);
+    const supabase = createClient();
+    const from = mailHistory.length;
+    const to = from + PAGE_SIZE - 1;
+    const { data } = await supabase
+      .from('mail_history')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .range(from, to);
+
+    if (data) {
+      setMailHistory(prev => [...prev, ...data]);
+      setHasMore(data.length === PAGE_SIZE);
+    } else {
+      setHasMore(false);
+    }
+    setLoadingMore(false);
   };
 
   const handleDelete = (id: string) => {
@@ -446,6 +473,16 @@ export default function DashboardClient({
                 })
               )}
             </div>
+
+            {hasMore && (
+              <button
+                onClick={handleLoadMore}
+                disabled={loadingMore}
+                className="w-full border border-dashed border-white/10 py-4 font-mono uppercase tracking-[0.2em] text-[10px] text-white/30 hover:text-white hover:border-white/30 transition-colors duration-200 mt-3"
+              >
+                {loadingMore ? 'LOADING...' : 'LOAD MORE'}
+              </button>
+            )}
           </div>
 
         </div>

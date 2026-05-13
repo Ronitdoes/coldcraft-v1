@@ -1,15 +1,20 @@
-import { NextResponse } from 'next/server';
+import { type NextRequest } from 'next/server'
+import { updateSession } from '@/utils/supabase/proxy'
 
-export function proxy() {
-  // Add proxy logic if needed later
-  return NextResponse.next();
+export async function proxy(request: NextRequest) {
+  return await updateSession(request)
 }
 
 export const config = {
   matcher: [
-    "/upload/:path*",
-    "/onboarding/:path*",
-    "/dashboard/:path*",
-    "/compose/:path*",
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - Static assets (svg, png, jpg, etc.)
+     * - api routes (handled by their own auth)
+     */
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff|woff2)$).*)',
   ],
-};
+}

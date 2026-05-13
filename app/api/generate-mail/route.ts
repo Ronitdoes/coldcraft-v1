@@ -104,7 +104,19 @@ MAIL TARGET:
       temperature: getToneTemperature(tone),
       max_tokens: 600,
     });
-  } catch (err) {
+  } catch (err: unknown) {
+    // Detect Groq rate limit (429) and surface it as a retryable 503
+    if (err && typeof err === "object" && "status" in err && (err as { status: number }).status === 429) {
+      const retryAfter = (err as { headers?: { get?: (k: string) => string | null } }).headers?.get?.("retry-after");
+      return Response.json(
+        {
+          error: "Our AI is handling too many requests right now. Please wait and try again.",
+          retryAfter: retryAfter ? Number(retryAfter) : 30,
+        },
+        { status: 503 }
+      );
+    }
+
     console.error("Groq error:", err);
     return Response.json(
       { error: "We could not generate your email right now. Please try again." },

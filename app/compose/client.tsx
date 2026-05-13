@@ -100,12 +100,33 @@ export default function ComposeClient({ profile }: { profile: Profile | null }) 
     return () => clearInterval(interval);
   }, [loading]);
 
-  const handleGenerate = async () => {
+  const [retryCountdown, setRetryCountdown] = useState(0);
+
+  // Countdown timer for server-busy retry
+  useEffect(() => {
+    if (retryCountdown <= 0) return;
+    const timer = setInterval(() => {
+      setRetryCountdown(prev => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          // Auto-retry when countdown reaches 0
+          doGenerate(true);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [retryCountdown > 0]);
+
+  const doGenerate = async (isRetry = false) => {
     if (!inputs.recipient || !inputs.company || !inputs.role) {
       setError("RECIPIENT, COMPANY, AND ROLE ARE REQUIRED.");
       return;
     }
     setError("");
+    setRetryCountdown(0);
     setLoading(true);
     setScreen("loading");
 
@@ -116,6 +137,15 @@ export default function ComposeClient({ profile }: { profile: Profile | null }) 
         body: JSON.stringify(inputs),
       });
       const data = await res.json();
+
+      if (res.status === 503 && data.retryAfter && !isRetry) {
+        // Server busy — start countdown for auto-retry
+        setLoading(false);
+        setScreen("empty");
+        setRetryCountdown(Math.min(data.retryAfter, 60));
+        return;
+      }
+
       if (!res.ok) {
         setError(data.error ?? "GENERATION FAILED. TRY AGAIN.");
         setScreen("empty");
@@ -130,6 +160,8 @@ export default function ComposeClient({ profile }: { profile: Profile | null }) 
       setLoading(false);
     }
   };
+
+  const handleGenerate = () => doGenerate(false);
 
   const handleCopy = async () => {
     const full = `Subject: ${output.subject}\n\n${output.body}`;
@@ -245,7 +277,13 @@ export default function ComposeClient({ profile }: { profile: Profile | null }) 
           </div>
         </div>
 
-        {error && (
+        {retryCountdown > 0 && (
+          <p className="font-mono uppercase tracking-[0.2em] text-[10px] text-amber-400/80 mt-3 animate-pulse">
+            ⏳ SERVER BUSY — RETRYING IN {retryCountdown}s...
+          </p>
+        )}
+
+        {error && retryCountdown === 0 && (
           <p className="font-mono uppercase tracking-[0.2em] text-[10px] text-red-500/80 mt-3">
             {error}
           </p>

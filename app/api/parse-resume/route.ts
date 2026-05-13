@@ -101,7 +101,18 @@ export async function POST(req: Request) {
         temperature: 0.1,
         max_tokens: 500,
       });
-    } catch (err) {
+    } catch (err: unknown) {
+      if (err && typeof err === "object" && "status" in err && (err as { status: number }).status === 429) {
+        const retryAfter = (err as { headers?: { get?: (k: string) => string | null } }).headers?.get?.("retry-after");
+        return Response.json(
+          {
+            error: "Our AI is handling too many requests right now. Please wait and try again.",
+            retryAfter: retryAfter ? Number(retryAfter) : 30,
+          },
+          { status: 503 }
+        );
+      }
+
       console.error("Groq parse error:", err);
       return Response.json({ error: "We could not read your resume right now. Please try again." }, { status: 500 });
     }
