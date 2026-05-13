@@ -44,15 +44,21 @@ export default function ToggleGroup({
                   isActive
                     ? "bg-white text-black"
                     : "border border-white/10 text-white/40 group-hover:border-white/30 group-hover:text-white/60"
-                } font-mono text-[10px] uppercase tracking-[0.2em] px-4 py-2 w-full text-left`}
+                } font-mono text-[11px] uppercase tracking-[0.2em] px-5 py-3 w-full text-left transition-colors duration-200`}
               >
                 {option.label}
               </button>
-              {option.description && (
-                <span className="font-mono text-[8px] text-white/20 opacity-0 group-hover:opacity-100 mt-1 tracking-widest pl-1">
-                  {option.description}
-                </span>
-              )}
+              
+              {/* Expandable description area to avoid excessive empty space */}
+              <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100">
+                <div className="overflow-hidden">
+                  {option.description && (
+                    <span className="block font-mono text-[10px] text-white/50 pt-2 pb-1 tracking-widest pl-1">
+                      {option.description}
+                    </span>
+                  )}
+                </div>
+              </div>
             </div>
           );
         })}

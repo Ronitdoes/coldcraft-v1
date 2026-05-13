@@ -25,7 +25,6 @@ type Profile = {
 
 type MailHistory = {
   id: string;
-  recipient: string;
   company: string;
   role: string;
   tone: string;
@@ -147,7 +146,6 @@ export default function DashboardClient({
 
   const handleResend = (mail: MailHistory) => {
     const params = new URLSearchParams({
-      recipient: mail.recipient || "",
       company: mail.company || "",
       role: mail.role || "",
       positionType: mail.position_type || "internship",

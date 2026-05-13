@@ -58,7 +58,6 @@ export default function ComposeClient({ profile }: { profile: Profile | null }) 
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [inputs, setInputs] = useState({
-    recipient: searchParams.get("recipient") ?? "",
     company: searchParams.get("company") ?? "",
     role: searchParams.get("role") ?? "",
     positionType: searchParams.get("positionType") ?? "internship",
@@ -121,8 +120,8 @@ export default function ComposeClient({ profile }: { profile: Profile | null }) 
   }, [retryCountdown > 0]);
 
   const doGenerate = async (isRetry = false) => {
-    if (!inputs.recipient || !inputs.company || !inputs.role) {
-      setError("RECIPIENT, COMPANY, AND ROLE ARE REQUIRED.");
+    if (!inputs.company || !inputs.role) {
+      setError("COMPANY AND ROLE ARE REQUIRED.");
       return;
     }
     setError("");
@@ -202,12 +201,7 @@ export default function ComposeClient({ profile }: { profile: Profile | null }) 
           </div>
         )}
 
-        <FormInput
-          label="RECIPIENT NAME"
-          value={inputs.recipient}
-          onChange={(v) => updateInput("recipient", v)}
-          placeholder="e.g. Priya Sharma"
-        />
+
 
         <FormInput
           label="COMPANY / STARTUP"
@@ -238,7 +232,7 @@ export default function ComposeClient({ profile }: { profile: Profile | null }) 
             onChange={(v) => updateInput("mailType", v)}
           />
           {inputs.mailType === "follow-up" && (
-            <p className="font-mono uppercase tracking-[0.2em] text-[10px] text-white/20 mt-2">
+            <p className="font-mono uppercase tracking-[0.2em] text-[10px] text-white/50 mt-2 pl-1">
               KEEP IT UNDER 80 WORDS. REFERENCE YOUR LAST MAIL.
             </p>
           )}
@@ -292,13 +286,13 @@ export default function ComposeClient({ profile }: { profile: Profile | null }) 
       {/* RIGHT COLUMN */}
       <div className="anim-right flex flex-col w-full md:sticky md:top-10">
         {screen === "empty" && (
-          <div className="border border-dashed border-white/10 p-12 min-h-[400px] flex flex-col items-center justify-center gap-6">
+          <div className="border border-dashed border-white/20 p-12 min-h-[400px] flex flex-col items-center justify-center gap-6">
             <div className="w-full flex flex-col gap-3 max-w-[80%] mx-auto opacity-30">
-              <div className="bg-white/5 h-2 w-4/5" />
-              <div className="bg-white/5 h-2 w-3/5" />
-              <div className="bg-white/5 h-2 w-4/5" />
-              <div className="bg-white/5 h-2 w-2/5" />
-              <div className="bg-white/5 h-2 w-3/5" />
+              <div className="bg-white/10 h-2 w-4/5" />
+              <div className="bg-white/10 h-2 w-3/5" />
+              <div className="bg-white/10 h-2 w-4/5" />
+              <div className="bg-white/10 h-2 w-2/5" />
+              <div className="bg-white/10 h-2 w-3/5" />
             </div>
             <p className="font-mono uppercase tracking-[0.2em] text-[10px] text-white/20">
               YOUR MAIL WILL APPEAR HERE
@@ -307,7 +301,7 @@ export default function ComposeClient({ profile }: { profile: Profile | null }) 
         )}
 
         {screen === "loading" && (
-          <div className="border border-dashed border-white/10 p-12 min-h-[400px] flex flex-col items-center justify-center">
+          <div className="border border-dashed border-white/20 p-12 min-h-[400px] flex flex-col items-center justify-center">
             <Preloader fullScreen={false} message={loadingTexts[loadingTextIndex]} />
           </div>
         )}
@@ -362,7 +356,7 @@ export default function ComposeClient({ profile }: { profile: Profile | null }) 
             subtitle={screen === "generated" ? "TRY A DIFFERENT VERSION" : "CRAFT YOUR COLD MAIL"}
             onClick={handleGenerate}
             loading={loading}
-            disabled={!inputs.recipient || !inputs.company || !inputs.role}
+            disabled={!inputs.company || !inputs.role}
             variant="flat"
             className="w-full"
           />

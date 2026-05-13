@@ -9,7 +9,6 @@ const TONES = new Set(["professional", "casual", "bold", "concise"]);
 const WORD_LIMITS = new Set([80, 120, 160]);
 
 type GenerateMailInput = {
-  recipient: string;
   company: string;
   role: string;
   positionType: "internship" | "full-time";
@@ -46,7 +45,6 @@ export async function POST(req: Request) {
   }
 
   const {
-    recipient,
     company,
     role,
     positionType,
@@ -87,7 +85,6 @@ CANDIDATE PROFILE:
 ${extraContext ? `- Extra context: ${extraContext}` : ""}
 
 MAIL TARGET:
-- Recipient name: ${recipient}
 - Company: ${company}
 - Role: ${role}
 - Position type: ${positionType}
@@ -144,7 +141,6 @@ MAIL TARGET:
     .from("mail_history")
     .insert({
       user_id: user.id,
-      recipient,
       company,
       role,
       tone,
@@ -179,7 +175,6 @@ function validateGenerateMailInput(value: unknown): GenerateMailInput | { error:
   }
 
   const payload = value as Record<string, unknown>;
-  const recipient = trimText(payload.recipient, 120);
   const company = trimText(payload.company, 120);
   const role = trimText(payload.role, 120);
   const positionType = trimText(payload.positionType, 40);
@@ -188,8 +183,8 @@ function validateGenerateMailInput(value: unknown): GenerateMailInput | { error:
   const wordLimit = Number(payload.wordLimit);
   const extraContext = trimText(payload.extraContext, 1000);
 
-  if (!recipient || !company || !role) {
-    return { error: "Please fill in the recipient, company, and role fields." };
+  if (!company || !role) {
+    return { error: "Please fill in the company and role fields." };
   }
 
   if (!POSITION_TYPES.has(positionType)) {
@@ -209,7 +204,6 @@ function validateGenerateMailInput(value: unknown): GenerateMailInput | { error:
   }
 
   return {
-    recipient,
     company,
     role,
     positionType: positionType as GenerateMailInput["positionType"],
