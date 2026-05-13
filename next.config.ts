@@ -13,7 +13,7 @@ const csp = [
   "img-src 'self' data: blob: https://lh3.googleusercontent.com *.googleusercontent.com",
   "font-src 'self' https://fonts.gstatic.com data:",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-  `script-src 'self'${isDev ? " 'unsafe-inline' 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
   `connect-src 'self'${supabaseUrl ? ` ${supabaseUrl}` : ""}`,
 ].join("; ");
 
