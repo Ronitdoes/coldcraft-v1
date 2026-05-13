@@ -1,5 +1,5 @@
-import { groq } from "@/lib/groq";
-import { RESUME_PARSE_PROMPT } from "@/lib/prompts";
+import { parseResumeWithAI } from "@/lib/ai/generate";
+import { getResumeParsePrompt } from "@/lib/prompts";
 import {
   consumeRateLimit,
   MAX_RESUME_FILE_BYTES,
@@ -13,6 +13,13 @@ import {
 import { createClient } from "@/utils/supabase/server";
 import { extractText } from "unpdf";
 
+type ProjectEntry = {
+  name: string;
+  description: string;
+  tech: string;
+  link: string;
+};
+
 type ParsedResume = {
   name: string;
   college: string;
@@ -21,7 +28,7 @@ type ParsedResume = {
   linkedin: string;
   portfolio: string;
   skills: string[];
-  projects: string[];
+  projects: ProjectEntry[];
 };
 
 export async function POST(req: Request) {
@@ -78,34 +85,22 @@ export async function POST(req: Request) {
       return Response.json({ error: "This resume has too much text to process. Please upload a shorter version." }, { status: 400 });
     }
 
-    let completion;
+    let aiText: string;
     try {
-      completion = await groq.chat.completions.create({
-        model: "llama-3.1-8b-instant",
-        messages: [
-          { role: "system", content: RESUME_PARSE_PROMPT },
-          { role: "user", content: `Extract from this resume:\n\n${resumeText}` },
-        ],
-        temperature: 0.1,
-        max_tokens: 500,
+      const result = await parseResumeWithAI({
+        systemPrompt: getResumeParsePrompt(),
+        userMessage: `Extract from this resume:\n\n${resumeText}`,
       });
+      aiText = result.text;
     } catch (err: unknown) {
-      if (err && typeof err === "object" && "status" in err && (err as { status: number }).status === 429) {
-        const retryAfter = (err as { headers?: { get?: (k: string) => string | null } }).headers?.get?.("retry-after");
-        return Response.json(
-          {
-            error: "Our AI is handling too many requests right now. Please wait and try again.",
-            retryAfter: retryAfter ? Number(retryAfter) : 30,
-          },
-          { status: 503 }
-        );
-      }
-
-      console.error("Groq parse error:", err);
-      return Response.json({ error: "We could not read your resume right now. Please try again." }, { status: 500 });
+      console.error("AI parse error:", err);
+      return Response.json(
+        { error: "We could not read your resume right now. Please try again." },
+        { status: 500 },
+      );
     }
 
-    const parsed = parseResumeJson(completion.choices[0].message.content);
+    const parsed = parseResumeJson(aiText);
     if (!parsed) {
       return Response.json({ error: "We could not understand the resume details. Please try again." }, { status: 500 });
     }
@@ -172,9 +167,32 @@ function parseResumeJson(raw: string | null): ParsedResume | null {
       linkedin: trimText(value.linkedin, 300),
       portfolio: trimText(value.portfolio, 300),
       skills: sanitizeStringArray(value.skills, 8, 80),
-      projects: sanitizeStringArray(value.projects, 5, 120),
+      projects: sanitizeProjects(value.projects),
     };
   } catch {
     return null;
   }
+}
+
+function sanitizeProjects(raw: unknown): ProjectEntry[] {
+  if (!Array.isArray(raw)) return [];
+
+  return raw.slice(0, 5).map((item) => {
+    // Fallback: if the AI returned a plain string, wrap it
+    if (typeof item === "string") {
+      return { name: item.slice(0, 120), description: "", tech: "", link: "" };
+    }
+
+    if (item && typeof item === "object") {
+      const obj = item as Record<string, unknown>;
+      return {
+        name: trimText(obj.name, 120),
+        description: trimText(obj.description, 200),
+        tech: trimText(obj.tech, 200),
+        link: trimText(obj.link, 300),
+      };
+    }
+
+    return { name: "", description: "", tech: "", link: "" };
+  }).filter((p) => p.name.length > 0);
 }

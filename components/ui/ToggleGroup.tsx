@@ -16,6 +16,8 @@ interface ToggleGroupProps {
   columns?: number;
   /** Optional hint text below the group */
   hint?: string;
+  /** Disable all interactions */
+  disabled?: boolean;
 }
 
 export default function ToggleGroup({
@@ -25,13 +27,14 @@ export default function ToggleGroup({
   onChange,
   columns,
   hint,
+  disabled,
 }: ToggleGroupProps) {
   const gridClass = columns 
     ? `grid grid-cols-1 ${columns === 2 ? 'sm:grid-cols-2' : columns === 3 ? 'sm:grid-cols-3' : `md:grid-cols-${columns}`} gap-2` 
     : "flex flex-wrap gap-2";
 
   return (
-    <div>
+    <div className={disabled ? "opacity-40 pointer-events-none" : ""}>
       <FormLabel>{label}</FormLabel>
       <div className={gridClass}>
         {options.map((option) => {

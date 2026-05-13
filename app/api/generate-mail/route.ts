@@ -1,4 +1,4 @@
-import { groq } from "@/lib/groq";
+import { generateMailWithAI } from "@/lib/ai/generate";
 import { MAIL_GENERATION_PROMPT } from "@/lib/prompts";
 import { consumeRateLimit, requireAllowedOrigin, trimText } from "@/lib/security";
 import { createClient } from "@/utils/supabase/server";
@@ -67,11 +67,14 @@ export async function POST(req: Request) {
     );
   }
 
+  // Override word limit for CONCISE tone
+  const effectiveWordLimit = tone === "concise" ? 80 : wordLimit;
+
   const userMessage = `
 Write a ${mailType === "follow-up" ? "follow-up" : "fresh"} cold email
 for a ${positionType} position.
 
-WORD LIMIT: ${wordLimit} words maximum for the mail body.
+WORD LIMIT: ${effectiveWordLimit} words maximum for the mail body.
 TONE: ${tone.toUpperCase()}
 
 CANDIDATE PROFILE:
@@ -80,7 +83,8 @@ CANDIDATE PROFILE:
 - GitHub: ${profile.github || "not provided"}
 - LinkedIn: ${profile.linkedin || "not provided"}
 - Portfolio: ${profile.portfolio || "not provided"}
-- Top Projects: ${profile.projects?.slice(0, 5).join(", ") || "not provided"}
+- Top Projects:
+${formatProjects(profile.projects)}
 - Top Skills: ${profile.skills?.slice(0, 8).join(", ") || "not provided"}
 ${extraContext ? `- Extra context: ${extraContext}` : ""}
 
@@ -90,38 +94,22 @@ MAIL TARGET:
 - Position type: ${positionType}
 `;
 
-  let completion;
+  let output: string;
   try {
-    completion = await groq.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
-      messages: [
-        { role: "system", content: MAIL_GENERATION_PROMPT },
-        { role: "user", content: userMessage },
-      ],
+    const result = await generateMailWithAI({
+      systemPrompt: MAIL_GENERATION_PROMPT,
+      userMessage,
       temperature: getToneTemperature(tone),
-      max_tokens: 600,
     });
+    output = result.text;
   } catch (err: unknown) {
-    // Detect Groq rate limit (429) and surface it as a retryable 503
-    if (err && typeof err === "object" && "status" in err && (err as { status: number }).status === 429) {
-      const retryAfter = (err as { headers?: { get?: (k: string) => string | null } }).headers?.get?.("retry-after");
-      return Response.json(
-        {
-          error: "Our AI is handling too many requests right now. Please wait and try again.",
-          retryAfter: retryAfter ? Number(retryAfter) : 30,
-        },
-        { status: 503 }
-      );
-    }
-
-    console.error("Groq error:", err);
+    console.error("AI generation error:", err);
     return Response.json(
       { error: "We could not generate your email right now. Please try again." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 
-  const output = completion.choices[0].message.content ?? "";
   const lines = output.split("\n");
   const subjectLine = lines.find((line) => line.startsWith("SUBJECT:"));
   const subject = subjectLine?.replace("SUBJECT:", "").trim() ?? "";
@@ -169,6 +157,23 @@ function getToneTemperature(tone: GenerateMailInput["tone"]): number {
   return map[tone];
 }
 
+function formatProjects(projects: unknown): string {
+  if (!projects || !Array.isArray(projects) || projects.length === 0) {
+    return "  none provided";
+  }
+  return projects.slice(0, 5).map((p: unknown, i: number) => {
+    if (typeof p === "string") return `  ${i + 1}. ${p}`;
+    if (p && typeof p === "object") {
+      const proj = p as { name?: string; description?: string; tech?: string; link?: string };
+      const desc = proj.description ? ` — ${proj.description}` : "";
+      const tech = proj.tech ? ` (${proj.tech})` : "";
+      const link = proj.link ? ` [Link: ${proj.link}]` : "";
+      return `  ${i + 1}. ${proj.name || "Unnamed"}${desc}${tech}${link}`;
+    }
+    return `  ${i + 1}. Unknown`;
+  }).join("\n");
+}
+
 function validateGenerateMailInput(value: unknown): GenerateMailInput | { error: string } {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     return { error: "Something was wrong with the request. Please refresh and try again." };
@@ -213,3 +218,4 @@ function validateGenerateMailInput(value: unknown): GenerateMailInput | { error:
     extraContext,
   };
 }
+

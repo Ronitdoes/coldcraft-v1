@@ -18,7 +18,7 @@ export type Profile = {
   linkedin?: string;
   portfolio?: string;
   skills?: string[];
-  projects?: string[];
+  projects?: { name: string; description: string; tech: string; link: string }[];
 };
 
 type Screen = "empty" | "loading" | "generated";
@@ -75,6 +75,13 @@ export default function ComposeClient({ profile }: { profile: Profile | null }) 
   const [screen, setScreen] = useState<Screen>("empty");
 
   const isIncompleteProfile = !profile || !profile.github || !profile.linkedin || !profile.projects || profile.projects.length < 2;
+
+  // Auto-lock word limit to 80 when CONCISE tone is selected
+  useEffect(() => {
+    if (inputs.tone === "concise") {
+      setInputs(prev => ({ ...prev, wordLimit: 80 }));
+    }
+  }, [inputs.tone]);
 
   useGSAP(() => {
     if (!containerRef.current) return;
@@ -247,10 +254,11 @@ export default function ComposeClient({ profile }: { profile: Profile | null }) 
         />
 
         <ToggleGroup
-          label="WORD LIMIT"
+          label={inputs.tone === "concise" ? "WORD LIMIT (LOCKED — CONCISE)" : "WORD LIMIT"}
           options={WORD_LIMIT_OPTIONS}
           value={String(inputs.wordLimit)}
           onChange={(v) => updateInput("wordLimit", Number(v))}
+          disabled={inputs.tone === "concise"}
         />
 
         <div>

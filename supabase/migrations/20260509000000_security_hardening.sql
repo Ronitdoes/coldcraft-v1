@@ -1,5 +1,11 @@
+-- =============================================
+-- SECURITY HARDENING — Rate Limiting + Storage
+-- =============================================
+
+-- Private schema for server-only tables
 create schema if not exists app_private;
 
+-- Rate limit tracking table (service_role only)
 create table if not exists app_private.api_rate_limits (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
@@ -13,7 +19,7 @@ create table if not exists app_private.api_rate_limits (
 
 alter table app_private.api_rate_limits enable row level security;
 
-drop policy if exists "Service role manages api rate limits" on app_private.api_rate_limits;
+-- Only service_role can access rate limit data
 create policy "Service role manages api rate limits"
 on app_private.api_rate_limits
 for all
@@ -21,12 +27,14 @@ to service_role
 using (true)
 with check (true);
 
+-- Lock down the private schema from all public roles
 revoke all on schema app_private from public, anon, authenticated;
 grant usage on schema app_private to service_role;
 
 revoke all on all tables in schema app_private from public, anon, authenticated;
 grant all on app_private.api_rate_limits to service_role;
 
+-- Rate limit RPC function (security invoker — runs as the caller)
 create or replace function public.consume_rate_limit(
   p_user_id uuid,
   p_action text,
@@ -84,11 +92,38 @@ begin
 end;
 $$;
 
+-- Only service_role can call the rate limit function
 revoke all on function public.consume_rate_limit(uuid, text, integer, integer) from public, anon, authenticated;
 grant execute on function public.consume_rate_limit(uuid, text, integer, integer) to service_role;
 
+-- Lock down storage bucket for resumes
 update storage.buckets
 set
   file_size_limit = 5242880,
   allowed_mime_types = array['application/pdf']
 where id = 'resumes';
+
+-- =============================================
+-- PERFORMANCE — Indexes for mail_history
+-- =============================================
+
+-- Index for dashboard queries: SELECT * WHERE user_id = ? ORDER BY created_at DESC
+create index if not exists idx_mail_history_user_id
+on public.mail_history (user_id);
+
+create index if not exists idx_mail_history_user_created
+on public.mail_history (user_id, created_at desc);
+
+-- =============================================
+-- MAINTENANCE — pg_cron cleanup job
+-- =============================================
+
+-- Enable pg_cron extension
+create extension if not exists pg_cron with schema pg_catalog;
+
+-- Schedule daily cleanup of expired rate limit entries (3 AM UTC)
+select cron.schedule(
+  'cleanup-rate-limits',
+  '0 3 * * *',
+  $$DELETE FROM app_private.api_rate_limits WHERE window_start < now() - interval '24 hours'$$
+);

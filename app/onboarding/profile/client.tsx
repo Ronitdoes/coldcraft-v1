@@ -8,6 +8,7 @@ import BrandHeader from "@/components/ui/BrandHeader";
 import StepIndicator from "@/components/ui/StepIndicator";
 import FormInput from "@/components/ui/FormInput";
 import ChipGroup from "@/components/ui/ChipGroup";
+import ProjectEditor from "@/components/ui/ProjectEditor";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 
 export default function ProfileReviewPage() {
@@ -26,7 +27,7 @@ export default function ProfileReviewPage() {
   });
 
   const [skills, setSkills] = useState<string[]>([]);
-  const [projects, setProjects] = useState<string[]>([]);
+  const [projects, setProjects] = useState<{ name: string; description: string; tech: string; link: string }[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -59,7 +60,15 @@ export default function ProfileReviewPage() {
             setSkills(profile.skills);
           }
           if (profile.projects && Array.isArray(profile.projects)) {
-            setProjects(profile.projects);
+            setProjects(profile.projects.map((p: any) => {
+              if (typeof p === 'string') return { name: p, description: '', tech: '', link: '' };
+              return { 
+                name: p.name || '', 
+                description: p.description || '', 
+                tech: p.tech || '',
+                link: p.link || ''
+              };
+            }));
           }
         }
       } else {
@@ -266,12 +275,11 @@ export default function ProfileReviewPage() {
               animClass="anim-chips"
             />
 
-            <ChipGroup
+            <ProjectEditor
               label="KEY PROJECTS"
-              items={projects}
-              onItemsChange={setProjects}
-              addButtonText="+ ADD PROJECT"
-              animClass="anim-chips"
+              projects={projects}
+              onChange={setProjects}
+              animClass="anim-fields"
             />
 
             {/* Save Button (Mobile) */}

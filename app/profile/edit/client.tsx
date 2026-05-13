@@ -7,6 +7,7 @@ import { createClient } from "@/utils/supabase/client";
 import BrandHeader from "@/components/ui/BrandHeader";
 import FormInput from "@/components/ui/FormInput";
 import ChipGroup from "@/components/ui/ChipGroup";
+import ProjectEditor from "@/components/ui/ProjectEditor";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 
 const LOADING_TEXTS = [
@@ -42,7 +43,7 @@ export default function EditProfileClient() {
     linkedin: "",
   });
   const [skills, setSkills] = useState<string[]>([]);
-  const [projects, setProjects] = useState<string[]>([]);
+  const [projects, setProjects] = useState<{ name: string; description: string; tech: string; link: string }[]>([]);
 
   const [supabase] = useState(() => createClient());
 
@@ -79,7 +80,17 @@ export default function EditProfileClient() {
             linkedin: profile.linkedin || "",
           });
           if (profile.skills && Array.isArray(profile.skills)) setSkills(profile.skills);
-          if (profile.projects && Array.isArray(profile.projects)) setProjects(profile.projects);
+          if (profile.projects && Array.isArray(profile.projects)) {
+            setProjects(profile.projects.map((p: any) => {
+              if (typeof p === 'string') return { name: p, description: '', tech: '', link: '' };
+              return { 
+                name: p.name || '', 
+                description: p.description || '', 
+                tech: p.tech || '',
+                link: p.link || ''
+              };
+            }));
+          }
         }
       }
       setIsLoading(false);
@@ -123,7 +134,17 @@ export default function EditProfileClient() {
           linkedin: p.linkedin || formData.linkedin,
         });
         if (p.skills && Array.isArray(p.skills)) setSkills(p.skills);
-        if (p.projects && Array.isArray(p.projects)) setProjects(p.projects);
+        if (p.projects && Array.isArray(p.projects)) {
+          setProjects(p.projects.map((item: any) => {
+            if (typeof item === 'string') return { name: item, description: '', tech: '', link: '' };
+            return { 
+              name: item.name || '', 
+              description: item.description || '', 
+              tech: item.tech || '',
+              link: item.link || ''
+            };
+          }));
+        }
       } else {
         setParseError(data.error || "Failed to parse resume. Try again.");
         setSelectedFile(null);
@@ -188,7 +209,9 @@ export default function EditProfileClient() {
   if (isLoading) {
     return (
       <div className="min-h-screen-stable w-full bg-black overflow-x-hidden relative">
-        <BrandHeader className="absolute top-8 left-8 z-20" />
+        <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/5 px-4 md:px-8 pt-6 md:pt-8 pb-4 flex items-center justify-between">
+          <BrandHeader />
+        </nav>
         <div className="w-full max-w-6xl px-4 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center min-h-screen-stable pt-32 pb-24 md:py-24 mx-auto">
           <div className="flex flex-col items-start justify-center pt-16 md:pt-0">
             <div className="w-32 h-32 md:w-48 md:h-48 bg-white/[0.03] animate-pulse mb-6" />
@@ -209,7 +232,7 @@ export default function EditProfileClient() {
     <div ref={containerRef} className="min-h-screen-stable w-full bg-black overflow-x-hidden relative perspective-[1200px] pb-24 md:pb-0">
 
       {/* Top Navbar */}
-      <div className="fixed top-0 left-0 right-0 h-20 md:h-24 bg-black/60 backdrop-blur-md z-40 border-b border-white/5 flex items-center justify-between px-6 md:px-12">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/5 px-4 md:px-8 pt-6 md:pt-8 pb-4 flex items-center justify-between">
         <BrandHeader href="/dashboard" />
         
         <button
@@ -218,7 +241,7 @@ export default function EditProfileClient() {
         >
           ← BACK
         </button>
-      </div>
+      </nav>
 
       {/* Main Container */}
       <div className="w-full max-w-7xl mx-auto h-full grid grid-cols-1 md:grid-cols-2">
@@ -390,11 +413,10 @@ export default function EditProfileClient() {
               animClass="anim-chips"
             />
 
-            <ChipGroup
+            <ProjectEditor
               label="KEY PROJECTS"
-              items={projects}
-              onItemsChange={setProjects}
-              addButtonText="+ ADD PROJECT"
+              projects={projects}
+              onChange={setProjects}
               animClass="anim-chips"
             />
 

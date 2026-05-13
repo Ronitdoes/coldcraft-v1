@@ -20,7 +20,7 @@ type Profile = {
   github: string;
   linkedin: string;
   skills: string[];
-  projects: string[];
+  projects: { name: string; description: string; tech: string; link: string }[];
 };
 
 type MailHistory = {
