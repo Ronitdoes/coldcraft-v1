@@ -168,7 +168,13 @@ Rules:
     If not clear from the resume, use ""
   - link: project URL if found (GitHub, Demo, etc.). If not found, use ""
 - If a field is not found use "" for strings and [] for arrays
-- year: calculate the student's current year of study based on their start year. Formula: (${currentYear} - Start Year) + 1. For example, if start year is ${currentYear - 1}, they are "Second Year". If start year is ${currentYear - 2}, they are "Third Year". Format as "[Year] [Degree] [Major]" (e.g., "Second Year B.Tech CSE"). If they have already graduated, use "Graduated [Degree] [Major]".
+- year: determine the student's current year of study. The most reliable way is to look at their expected graduation year. The current year is ${currentYear}.
+  - If expected graduation is ${currentYear + 4}, they are "First Year".
+  - If expected graduation is ${currentYear + 3}, they are "Second Year".
+  - If expected graduation is ${currentYear + 2}, they are "Third Year".
+  - If expected graduation is ${currentYear + 1}, they are "Fourth Year".
+  - If expected graduation is ${currentYear} or earlier, they have "Graduated".
+  Format as "[Year] [Degree] [Major]" (e.g., "Third Year B.Tech CSE" or "Graduated B.S. Computer Science"). If expected graduation year is not found but start year is, estimate their year based on (${currentYear} - Start Year) + 1.
 - Do NOT invent or embellish project descriptions. Only extract what is 
   explicitly written on the resume.
 `;
